@@ -1,6 +1,6 @@
 package entity;
 
-
+import entity.types.Type;
 
 public class Attack {
     private String name;
@@ -16,4 +16,45 @@ public class Attack {
         this.power = power;
         this.failureProbability = failureProbability;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public int getLimitUse() {
+        return limitUse;
+    }
+
+    public void setLimitUse(int limitUse) {
+        this.limitUse = limitUse;
+    }
+
+    public int getPower() {
+        return power;
+    }
+
+    public void setPower(int power) {
+        this.power = power;
+    }
+
+    public float getFailureProbability() {
+        return failureProbability;
+    }
+
+    public void setFailureProbability(float failureProbability) {
+        this.failureProbability = failureProbability;
+    }
+    
 }

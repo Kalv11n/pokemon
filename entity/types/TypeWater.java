@@ -1,5 +1,29 @@
 package entity.types;
 
-public class TypeWater {
+public class TypeWater extends Type{
+    private float flood;
+    private float fall;
+    
+    public TypeWater() {
+
+    }
+
+    public float getFlood() {
+        return flood;
+    }
+
+    public void setFlood(float flood) {
+        this.flood = flood;
+    }
+
+    public float getFall() {
+        return fall;
+    }
+
+    public void setFall(float fall) {
+        this.fall = fall;
+    }
+
+    
     
 }
