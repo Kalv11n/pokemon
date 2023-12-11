@@ -1,8 +1,9 @@
 package parser;
 
 public class ConfigParser {
-    public void parse(String line) {
-        String[] args = this.splitArguments(line);
+    public String[] parse(String line) {
+        return this.splitArguments(line);
+        
     }
 
     public String[] splitArguments(String line) {

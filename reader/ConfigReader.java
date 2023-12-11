@@ -2,8 +2,11 @@ package reader;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Scanner;
 
+import entity.Monster;
+import entity.types.TypeFire;
 import parser.ConfigParser;
 
 public class ConfigReader {
@@ -67,7 +70,7 @@ public class ConfigReader {
 
     private void readAttack() throws Exception {
         try {
-
+            Monster monster = null;
             String line;
             boolean createMonster = false;
 
@@ -81,6 +84,8 @@ public class ConfigReader {
                         }
 
                         createMonster = true;
+                        TypeFire fire = new TypeFire();
+                        monster = new Monster("Test", fire, 100, 100, 100);
                         
                         break;
                 
@@ -94,7 +99,12 @@ public class ConfigReader {
                         break;
 
                     default:
-                        this.parser.parse(line);
+                        if (monster == null) {
+                            throw new Exception("Value not affected to a monster");
+                        }
+
+                        String[] args = this.parser.parse(line);
+                        this.implement(monster, args);
                         break;
                 }
             }
@@ -114,5 +124,76 @@ public class ConfigReader {
 
     private void readState() {
 
+    }
+
+    private void implement(Monster monster, String[] args) throws Exception {
+        // Test if args[0] is an Monster attribute or a Type attribute
+        if (!hasAttribute(monster, args[0])) {
+            switch (args[0]) {
+                default:
+                    throw new Exception("Error configuration : no attribute '" + args[0] + "' in Type::class");
+            }
+        }
+
+        switch (args[0]) {
+            case "Name":
+                monster.setName(args[1]);
+                break;
+
+            case "Type":
+                // Select the type
+                switch (args[1]) {
+                    case "Electric":
+                        break;
+
+                    case "Water":
+                        break;
+                    
+                    case "Fire":
+                        break;
+                    
+                    case "Earth":
+                        break;
+                    
+                    case "Nature":
+                        break;
+                    
+                    default:
+                        throw new Exception("Undefined type '" + args[1] + "'");
+                }
+                break;
+            
+            case "HP":
+                monster.setHp(args[1]);
+                break;
+            
+            case "Speed":
+                monster.setSpeed(args[1]);
+                break;
+            
+            case "Attack":
+                monster.setAttack(args[1]);
+                break;
+            
+            case "Defense":
+                monster.setDefense(args[1]);
+                break;
+            
+            default:
+                throw new Exception("Error configuration : no attribute '" + args[0] + "' in Monster::class");
+        }
+    }
+
+    public static boolean hasAttribute(Object obj, String attributeName) {
+        Class<?> objClass = obj.getClass();
+        Field[] fields = objClass.getDeclaredFields();
+
+        for (Field field : fields) {
+            if (field.getName().equals(attributeName)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
