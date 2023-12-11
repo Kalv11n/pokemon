@@ -14,5 +14,10 @@ public class TypeElectric extends Type {
     public void setParalysis(float paralysis) {
         this.paralysis = paralysis;
     }
+
+    @Override
+    public String toString() {
+        return "TypeElectric [paralysis=" + paralysis + "]";
+    }
     
 }

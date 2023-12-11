@@ -1,5 +1,7 @@
 package entity;
 
+import java.util.Arrays;
+
 import entity.types.Type;
 
 public class Monster {
@@ -8,6 +10,7 @@ public class Monster {
     private int hp;
     private int speed;
     private Attack[] attacks;
+    private int attack;
     private int defense;
 
     public Monster(String name, Type type, int hp, int speed, int defense) {
@@ -45,13 +48,21 @@ public class Monster {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+    
+    public Attack[] getAttacks() {
+        return attacks;
+    }
 
-    public void setAttack(Attack attack, int id) {
+    public void setAttackInCollection(Attack attack, int id) {
         this.attacks[id] = attack;
     }
-    
-     public Attack[] getAttacks() {
-        return attacks;
+
+    public int getAttack() {
+        return this.attack;
+    }
+
+    public void setAttack(int attack) {
+        this.attack = attack;
     }
     
     public int getDefense() {
@@ -62,5 +73,9 @@ public class Monster {
         this.defense = defense;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Monster [name=" + name + ", type=" + type + ", hp=" + hp + ", speed=" + speed + ", attacks="
+                + Arrays.toString(attacks) + ", attack=" + attack + ", defense=" + defense + "]";
+    }    
 }
