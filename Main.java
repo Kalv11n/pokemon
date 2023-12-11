@@ -6,6 +6,6 @@ class Main {
         ConfigParser parser = new ConfigParser();
         ConfigReader reader = new ConfigReader(parser);
 
-        reader.read("attack");
+        reader.read("monster");
     }
 }

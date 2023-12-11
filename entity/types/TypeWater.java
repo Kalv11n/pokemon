@@ -19,11 +19,13 @@ public class TypeWater extends Type{
     public float getFall() {
         return fall;
     }
-
+    
     public void setFall(float fall) {
         this.fall = fall;
     }
 
-    
-    
+    @Override
+    public String toString() {
+        return "TypeWater [flood=" + flood + ", fall=" + fall + "]";
+    }    
 }
