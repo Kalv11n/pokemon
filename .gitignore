@@ -1,0 +1,6 @@
+# Class
+./*.class
+
+./reader/*.class
+
+./entity/*.class
