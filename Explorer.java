@@ -1,7 +1,9 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+import entity.Attack;
 import entity.Monster;
 import entity.Player;
 
@@ -20,10 +22,10 @@ public class Explorer {
         System.out.println("==========Pokémon==========");
         for(Player player : players){
             System.out.println("==========Player " + player.getId() + "=========");
-            System.out.println("=====Choose 3 Monster=====");
+            System.out.println("=====Choose 3 Monster======");
             int nbMonster = Monster.findAll().size();
-            for(int i=1; i < nbMonster; i++){
-                System.out.println(Monster.find(i));
+            for(int i=1; i <= nbMonster; i++){
+                System.out.println("[" + i + "]\t" + Monster.find(i));
             }
 
             for(int i=0; i < 3; i++){
@@ -33,6 +35,10 @@ public class Explorer {
                 int id = Integer.parseInt(idString);
                 Monster test = Monster.find(id);
                 player.addMonster(test);
+                List<Attack> attacks = Attack.findByType(test.getType());
+                for(int j=0; j < attacks.size(); j++){
+                    System.out.println("[" + (j + 1) + "]\t" + attacks.get(j));
+                }
             }
 
             Monster[] deck = player.getPlayerMonsters();
