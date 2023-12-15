@@ -77,11 +77,11 @@ public class Monster extends Card{
     }   
     
     //---- Others
-    public Monster find(int position) {
-        return monsters.get(position);
+    public static Monster find(int position) {
+        return monsters.get(position - 1);
     }
 
-    public List<Monster> findAll() {
+    public static List<Monster> findAll() {
         return monsters;
     }
 }

@@ -11,6 +11,10 @@ public class Player {
         this.id = playerId;
     }
 
+    public int getId() {
+        return this.id;
+    }
+
     public void addMonster(Monster newMonster) {
         for (int i = 0; i < this.playerMonsters.length; i++) {
             if (this.playerMonsters[i] == null) {
@@ -20,6 +24,10 @@ public class Player {
             }
         }
         System.out.println("La liste est pleine");
+    }
+
+    public Monster[] getPlayerMonsters(){
+        return this.playerMonsters;
     }
 
 }
