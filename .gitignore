@@ -1,6 +1,19 @@
-# Class
+# Main
 ./*.class
 
+# Reader
 ./reader/*.class
 
+# Instanciator
+./instanciator/*.class
+
+# Parser
+./parser/*.class
+
+# Reader
+./reader/*.class
+
+# Entity
 ./entity/*.class
+
+./entity/types/*.class

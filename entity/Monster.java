@@ -2,35 +2,15 @@ package entity;
 
 import java.util.Arrays;
 
-import entity.types.Type;
-
-public class Monster {
-    private String name;
-    private Type type;
+public class Monster extends Card{
     private int hp;
     private int speed;
     private Attack[] attacks;
     private int attack;
     private int defense;
 
-    public Monster(String name, Type type, int hp, int speed, int defense) {
+    public Monster() {
         this.attacks = new Attack[4];
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
     }
 
     public int getHp() {
@@ -75,7 +55,7 @@ public class Monster {
 
     @Override
     public String toString() {
-        return "Monster [name=" + name + ", type=" + type + ", hp=" + hp + ", speed=" + speed + ", attacks="
+        return "Monster [hp=" + hp + ", speed=" + speed + ", attacks="
                 + Arrays.toString(attacks) + ", attack=" + attack + ", defense=" + defense + "]";
     }    
 }
