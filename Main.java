@@ -1,8 +1,3 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
 import parser.ConfigParser;
 import reader.ConfigReader;
 
@@ -11,7 +6,10 @@ class Main {
         ConfigParser parser = new ConfigParser();
         ConfigReader reader = new ConfigReader(parser);
         Explorer explorer = new Explorer();
+
         reader.read("monster");
+        reader.read("attack");
+
         explorer.run();
     }
 

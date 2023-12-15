@@ -5,12 +5,21 @@ import java.util.List;
 
 public class Attack extends Card {
     private static List<Attack> attacks = new ArrayList<Attack>();
+    private String name;
     private int nbuse;
     private int power;
     private float fail;
     
     public Attack() {
         attacks.add(this);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getNbuse() {
@@ -39,8 +48,14 @@ public class Attack extends Card {
 
     @Override
     public String toString() {
-        return "Attack [nbuse=" + nbuse + ", power=" + power
+
+        if (name.length() < 8) {
+            return this.name + "\t\t[nbuse=" + nbuse + ", power=" + power
                 + ", fail=" + fail + "]";
+        }
+
+        return this.name + "\t[nbuse=" + nbuse + ", power=" + power
+            + ", fail=" + fail + "]";
     }
 
     //---- Others

@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Monster extends Card{
     private static List<Monster> monsters = new ArrayList<Monster>();
+    private String name;
     private int hp;
     private int speed;
     private Attack[] attacks;
@@ -15,6 +16,14 @@ public class Monster extends Card{
     public Monster() {
         this.attacks = new Attack[4];
         monsters.add(this);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getHp() {
@@ -59,8 +68,12 @@ public class Monster extends Card{
 
     @Override
     public String toString() {
-        return "Monster [hp=" + hp + ", speed=" + speed + ", attacks="
-                + Arrays.toString(attacks) + ", attack=" + attack + ", defense=" + defense + "]";
+        if (name.length() < 8) {
+            return this.name + "\t\t[hp=" + hp + ", speed=" + speed + ", attack=" + attack + ", defense=" + defense + "]";
+        } 
+
+        return this.name + "\t[hp=" + hp + ", speed=" + speed + /*", attacks="
+                + Arrays.toString(attacks) + */", attack=" + attack + ", defense=" + defense + "]";
     }   
     
     //---- Others
