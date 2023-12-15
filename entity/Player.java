@@ -1,17 +1,20 @@
 package entity;
 
 public class Player {
-    private int playerId;
-    private Monster[] monsters;
+    public static int playerId;
+    private int id;
+    private Monster[] playerMonsters;
 
     public Player() {
-        this.monsters = new Monster[3];
+        this.playerMonsters = new Monster[3];
+        playerId++;
+        this.id = playerId;
     }
 
     public void addMonster(Monster newMonster) {
-        for (int i = 0; i < this.monsters.length; i++) {
-            if (this.monsters[i] == null) {
-                this.monsters[i] = newMonster;
+        for (int i = 0; i < this.playerMonsters.length; i++) {
+            if (this.playerMonsters[i] == null) {
+                this.playerMonsters[i] = newMonster;
                 System.out.println("Monstre ajouté");
                 return;
             }
