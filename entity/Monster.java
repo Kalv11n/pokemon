@@ -1,8 +1,11 @@
 package entity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Monster extends Card{
+    private static List<Monster> monsters = new ArrayList<Monster>();
     private int hp;
     private int speed;
     private Attack[] attacks;
@@ -11,6 +14,7 @@ public class Monster extends Card{
 
     public Monster() {
         this.attacks = new Attack[4];
+        monsters.add(this);
     }
 
     public int getHp() {
@@ -57,5 +61,14 @@ public class Monster extends Card{
     public String toString() {
         return "Monster [hp=" + hp + ", speed=" + speed + ", attacks="
                 + Arrays.toString(attacks) + ", attack=" + attack + ", defense=" + defense + "]";
-    }    
+    }   
+    
+    //---- Others
+    public Monster find(int position) {
+        return monsters.get(position);
+    }
+
+    public List<Monster> findAll() {
+        return monsters;
+    }
 }

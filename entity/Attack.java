@@ -1,12 +1,16 @@
 package entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Attack extends Card {
+    private static List<Attack> attacks = new ArrayList<Attack>();
     private int nbuse;
     private int power;
     private float fail;
     
     public Attack() {
-        
+        attacks.add(this);
     }
 
     public int getNbuse() {
@@ -37,6 +41,15 @@ public class Attack extends Card {
     public String toString() {
         return "Attack [nbuse=" + nbuse + ", power=" + power
                 + ", fail=" + fail + "]";
+    }
+
+    //---- Others
+    public Attack find(int position) {
+        return attacks.get(position);
+    }
+
+    public List<Attack> findAll() {
+        return attacks;
     }
     
 }
