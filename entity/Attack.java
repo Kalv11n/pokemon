@@ -1,44 +1,24 @@
 package entity;
 
-import entity.types.Type;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Attack {
-    private String name;
-    private Type type;
-    private int limitUse;
+public class Attack extends Card {
+    private static List<Attack> attacks = new ArrayList<Attack>();
+    private int nbuse;
     private int power;
-    private float failureProbability;
+    private float fail;
     
-    public Attack(String name, Type type, int limitUse, int power, float failureProbability) {
-        this.name = name;
-        this.type = type;
-        this.limitUse = limitUse;
-        this.power = power;
-        this.failureProbability = failureProbability;
+    public Attack() {
+        attacks.add(this);
     }
 
-    public String getName() {
-        return name;
+    public int getNbuse() {
+        return nbuse;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public int getLimitUse() {
-        return limitUse;
-    }
-
-    public void setLimitUse(int limitUse) {
-        this.limitUse = limitUse;
+    public void setNbuse(int nbuse) {
+        this.nbuse = nbuse;
     }
 
     public int getPower() {
@@ -49,12 +29,27 @@ public class Attack {
         this.power = power;
     }
 
-    public float getFailureProbability() {
-        return failureProbability;
+    public float getFail() {
+        return fail;
     }
 
-    public void setFailureProbability(float failureProbability) {
-        this.failureProbability = failureProbability;
+    public void setFail(float fail) {
+        this.fail = fail;
+    }
+
+    @Override
+    public String toString() {
+        return "Attack [nbuse=" + nbuse + ", power=" + power
+                + ", fail=" + fail + "]";
+    }
+
+    //---- Others
+    public Attack find(int position) {
+        return attacks.get(position);
+    }
+
+    public List<Attack> findAll() {
+        return attacks;
     }
     
 }
