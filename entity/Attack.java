@@ -3,6 +3,16 @@ package entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.types.Type;
+import entity.types.TypeEarth;
+import entity.types.TypeElectric;
+import entity.types.TypeFire;
+import entity.types.TypeInsect;
+import entity.types.TypeNature;
+import entity.types.TypeNormal;
+import entity.types.TypePlant;
+import entity.types.TypeWater;
+
 public class Attack extends Card {
     private static List<Attack> attacks = new ArrayList<Attack>();
     private String name;
@@ -59,12 +69,24 @@ public class Attack extends Card {
     }
 
     //---- Others
-    public Attack find(int position) {
+    public static Attack find(int position) {
         return attacks.get(position);
     }
 
-    public List<Attack> findAll() {
+    public static List<Attack> findAll() {
         return attacks;
+    }
+
+    public static List<Attack> findByType(Type type) {
+        List<Attack> attacksByType = new ArrayList<>();
+        
+        for(Attack attack : attacks) {
+            if (attack.getType().getClass() == type.getClass()) {
+                attacksByType.add(attack);
+            }
+        }
+
+        return attacksByType;
     }
     
 }
