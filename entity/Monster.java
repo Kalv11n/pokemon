@@ -1,7 +1,6 @@
 package entity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Monster extends Card{
@@ -83,5 +82,9 @@ public class Monster extends Card{
 
     public static List<Monster> findAll() {
         return monsters;
+    }
+
+    public List<Attack> findAttacksByType() {
+        return Attack.findByType(getType());
     }
 }

@@ -36,6 +36,7 @@ public class Explorer {
                 Monster test = Monster.find(id);
                 player.addMonster(test);
                 List<Attack> attacks = Attack.findByType(test.getType());
+                System.out.println(attacks.size());
                 for(int j=0; j < attacks.size(); j++){
                     System.out.println("[" + (j + 1) + "]\t" + attacks.get(j));
                 }
