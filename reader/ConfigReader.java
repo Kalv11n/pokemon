@@ -99,7 +99,6 @@ public class ConfigReader {
                         }
 
                         createMonster = false;
-                        System.out.println(monster.toString() + "\n");
 
                         break;
 
@@ -152,7 +151,6 @@ public class ConfigReader {
                         }
 
                         createAttack = false;
-                        System.out.println(attack.toString() + "\n");
 
                         break;
 
