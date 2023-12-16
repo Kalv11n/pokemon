@@ -74,7 +74,14 @@ public class Monster extends Card{
         return this.name + "\t[hp=" + hp + ", speed=" + speed + /*", attacks="
                 + Arrays.toString(attacks) + */", attack=" + attack + ", defense=" + defense + "]";
     }   
-    
+    public String toStringWithAttacks() {
+        if (name.length() < 8) {
+            return this.name + "\t\t[hp=" + hp + ", speed=" + speed + ", attack=" + attack + ", defense=" + defense + "]" + "\n\t\t" + attacks[0].getName() +", " + attacks[1].getName() +", " + attacks[2].getName() +", " + attacks[3].getName()+ "]";
+        } 
+
+        return this.name + "\t[hp=" + hp + ", speed=" + speed + /*", attacks="
+                + Arrays.toString(attacks) + */", attack=" + attack + ", defense=" + defense + "]" + "\n\t\t[" + attacks[0].getName() +", " + attacks[1].getName() +", " + attacks[2].getName() +", " + attacks[3].getName()+ "]";
+    }  
     //---- Others
     public static Monster find(int position) {
         return monsters.get(position - 1);
