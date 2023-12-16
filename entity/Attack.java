@@ -84,6 +84,9 @@ public class Attack extends Card {
             if (attack.getType().getClass() == type.getClass()) {
                 attacksByType.add(attack);
             }
+            if (attack.getType() instanceof TypeNormal) {
+                attacksByType.add(attack);
+            }
         }
 
         return attacksByType;

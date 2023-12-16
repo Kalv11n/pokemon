@@ -4,7 +4,7 @@ public class TypeEarth extends Type{
     private float hide;
     
     public TypeEarth() {
-
+        this.setName("Terre");
     }
 
     public float getHide() {

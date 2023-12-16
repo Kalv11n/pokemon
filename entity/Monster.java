@@ -68,10 +68,10 @@ public class Monster extends Card{
     @Override
     public String toString() {
         if (name.length() < 8) {
-            return this.name + "\t\t[hp=" + hp + ", speed=" + speed + ", attack=" + attack + ", defense=" + defense + "]";
+            return "(" + this.getType().getName() + ")\t" + this.name + "\t\t[hp=" + hp + ", speed=" + speed + ", attack=" + attack + ", defense=" + defense + "]";
         } 
 
-        return this.name + "\t[hp=" + hp + ", speed=" + speed + /*", attacks="
+        return "(" + this.getType().getName() + ")\t" + this.name + "\t[hp=" + hp + ", speed=" + speed + /*", attacks="
                 + Arrays.toString(attacks) + */", attack=" + attack + ", defense=" + defense + "]";
     }   
     

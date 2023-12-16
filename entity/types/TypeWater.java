@@ -5,7 +5,7 @@ public class TypeWater extends Type{
     private float fall;
     
     public TypeWater() {
-
+        this.setName("Eau");
     }
 
     public float getFlood() {

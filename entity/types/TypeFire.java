@@ -4,7 +4,7 @@ public class TypeFire extends Type{
     private float burn;
 
     public TypeFire() {
-        
+        this.setName("Feu");
     }
 
     public float getBurn() {
