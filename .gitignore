@@ -1,5 +1,6 @@
 # Main
 *.class
+*.pdf
 
 # Reader
 reader/*.class

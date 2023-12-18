@@ -70,11 +70,15 @@ public class Attack extends Card {
         return attacks;
     }
 
+    public static Attack findLast() {
+        return attacks.get(attacks.size() - 1);
+    }
+
     public static List<Attack> findByType(Type type) {
         List<Attack> attacksByType = new ArrayList<>();
         
         for(Attack attack : attacks) {
-            if (attack.getType().getClass() == type.getClass()) {
+            if (attack.getType().getClass() == type.getClass() && !(attack.getType() instanceof TypeNormal)) {
                 attacksByType.add(attack);
             }
             if (attack.getType() instanceof TypeNormal) {
@@ -83,6 +87,10 @@ public class Attack extends Card {
         }
 
         return attacksByType;
+    }
+
+    public static void removeLast() {
+        attacks.remove(attacks.size() - 1);
     }
     
 }

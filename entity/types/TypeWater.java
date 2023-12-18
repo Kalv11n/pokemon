@@ -5,6 +5,7 @@ public class TypeWater extends Type{
     private float fall;
     
     public TypeWater() {
+        super(new TypeFire(), new TypeElectric());
         this.setName("Eau");
     }
 
