@@ -1,11 +1,10 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import entity.Attack;
 import entity.Monster;
 import entity.Player;
+import reader.InputReader;
 
 public class Explorer {
     public static final String ANSI_RESET = "\u001B[0m";
@@ -17,6 +16,7 @@ public class Explorer {
     public static final String ANSI_CYAN = "\u001B[36m";
 
     private Scanner sc;
+    private InputReader reader;
     private Player[] players = {new Player(), new Player()};
     private boolean terrainFlooded = false;
 
@@ -25,6 +25,7 @@ public class Explorer {
     }
     
     public void run(){
+        this.reader = new InputReader();
         this.sc  = new Scanner(System.in);
 
         this.init();
@@ -34,7 +35,10 @@ public class Explorer {
     }
 
     private void init(){
+        String choice;
+
         System.out.println("======== Pokémon ========") ;
+
         for(Player player : players){
             System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
             System.out.println("== CHOISISSEZ 3 POKEMONS ==\n");
@@ -45,11 +49,13 @@ public class Explorer {
             }
 
             for(int i=0; i < 3; i++){
-                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre:" + ANSI_RESET + " ");
-                String monsterString = sc.nextLine();
+                do {
+                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre:" + ANSI_RESET + " ");
+                    choice = sc.nextLine();
+                    
+                } while(!this.reader.checkInterval(1, Monster.findAll().size(), choice));    
                 
-                int idmonster = Integer.parseInt(monsterString);
-                Monster monster = Monster.find(idmonster);
+                Monster monster = Monster.find(Integer.parseInt(choice));
                 player.addMonster(monster);
                 
                 System.out.println(ANSI_PURPLE + "-> " + monster.getName() + ANSI_RESET +"\n");
@@ -61,11 +67,13 @@ public class Explorer {
                 }
 
                 for(int j=0; j < 4; j++){
-                    System.out.print("\n  " + ANSI_GREEN + "Veuillez saisir un id d'attaque:" + ANSI_RESET + " ");
-                    String attackString = sc.nextLine();
+                    do {
+                        System.out.print("\n  " + ANSI_GREEN + "Veuillez saisir un id d'attaque:" + ANSI_RESET + " ");
+                        choice = sc.nextLine();
 
-                    int id = Integer.parseInt(attackString);
-                    Attack attack = attacks.get(id - 1);
+                    } while(!this.reader.checkInterval(1, attacks.size(), choice));
+
+                    Attack attack = attacks.get(Integer.parseInt(choice) - 1);
                     monster.setAttackInCollection(attack, j);
 
                     System.out.println("  " + ANSI_PURPLE + "-> " + attack.getName() + ANSI_RESET);

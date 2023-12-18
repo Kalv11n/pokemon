@@ -2,6 +2,10 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import entity.state.NormalState;
+import entity.state.State;
 
 public class Monster extends Card{
     private static List<Monster> monsters = new ArrayList<Monster>();
@@ -11,12 +15,15 @@ public class Monster extends Card{
     private Attack[] attacks;
     private int attack;
     private int defense;
+    private State currentState;
 
     public Monster() {
+        this.currentState = new NormalState();
         this.attacks = new Attack[4];
         monsters.add(this);
     }
 
+    //---- getters & setters
     public String getName() {
         return this.name;
     }
@@ -65,6 +72,16 @@ public class Monster extends Card{
         this.defense = defense;
     }
 
+    public State getCurrentState() {
+        return this.currentState;
+    }
+
+    public void setCurrentState(State state) {
+        this.currentState = state;
+    }
+
+
+    //---- toString
     @Override
     public String toString() {
         String output = "(" + this.getType().getName() + ")\t";
@@ -99,7 +116,56 @@ public class Monster extends Card{
         return output;
     }  
 
-    //---- Others
+
+    //---- Fight functions
+    public boolean attack(Monster monster) {
+        double randomCoef = 0.85 + Math.random() * (1.0 - 0.85);
+        double dammageCoef = 1.0;
+        double dammage = 0.0;
+        double capacityRate;
+
+        // Check advantage or weakness
+        if (this.hasAdvantage(monster)) {
+            dammageCoef = 2.0;
+        } else if (this.hasWeakness(monster)) {
+            dammageCoef = 0.5;
+        }
+
+        // Normal State
+        if (this.getCurrentState() instanceof NormalState) {
+            dammage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * dammageCoef * randomCoef;
+        }
+
+        // Fail attack
+        double randomFail = Math.random();
+        
+        if (randomFail <= this.inUseAttack.getFail()) {
+            return false;
+        }
+
+        // Make dammage
+        monster.reduceHp((int) Math.round(dammage));
+        return true;
+    }
+
+    public void reduceHp(int dammage) {
+        if (this.hp - dammage < 0) {
+            this.hp = 0;
+        } else {
+            this.hp -= dammage;
+        }
+    }
+
+    public boolean hasAdvantage(Monster monster) {
+        return (this.getType().getAdvantageType().getClass() == monster.getType().getClass());
+    }
+
+    public boolean hasWeakness(Monster monster) {
+        return (this.getType().getWeaknessType().getClass() == monster.getType().getClass());
+    }
+
+
+    //---- Monsters List
     public static Monster find(int position) {
         return monsters.get(position - 1);
     }
@@ -108,7 +174,15 @@ public class Monster extends Card{
         return monsters;
     }
 
+    public static Monster findLast() {
+        return monsters.get(monsters.size() - 1);
+    }
+
     public List<Attack> findAttacksByType() {
-        return Attack.findByType(getType());
+        return Attack.findByType(this.getType());
+    }
+
+    public static void removeLast() {
+        monsters.remove(monsters.size() - 1);
     }
 }
