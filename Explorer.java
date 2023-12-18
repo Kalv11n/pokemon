@@ -28,6 +28,8 @@ public class Explorer {
     }
 
     private void init(){
+        double randomCoef =Math.random();
+        System.out.println(randomCoef);
         Asciiart.draw();
         for(Player player : players){
             System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
@@ -77,12 +79,16 @@ public class Explorer {
         System.out.println(ANSI_RED + "======== LE JEU VA COMMENCER =======" + ANSI_RESET + "\n");
         players[0].setInUseMonster(players[0].getPlayerMonsters()[0]);
         players[1].setInUseMonster(players[1].getPlayerMonsters()[0]);
-        if(players[1].getInUseMonster().getSpeed() > players[0].getInUseMonster().getSpeed()){
-            play(players[1]);
-        }
-        else {
+        boolean launch = true;
+        while(launch){
             play(players[0]);
+            play(players[1]);
+            if(players[1].getInUseMonster().getSpeed() > players[0].getInUseMonster().getSpeed()){
+                    System.out.println("\n" + ANSI_RED +"======== JOUEUR " + players[1].getId() + " PREND L'AVANTAGE========"+ ANSI_RESET);
+
+            }
         }
+        
     }
 
     public void play(Player player){
@@ -97,23 +103,32 @@ public class Explorer {
             repString = sc.nextLine();
             int idmonster = Integer.parseInt(repString);
             if(player.getPlayerMonsters()[idmonster].getHp() != 0){
-                System.out.println("\n"+ player.getPlayerMonsters()[idmonster].getName() + "! a toi de jouer");
+                System.out.println("\n"+ player.getPlayerMonsters()[idmonster].getName() + "! A toi de jouer");
+                player.setInUseMonster(player.getPlayerMonsters()[idmonster]);
             }
             else{
-                System.out.println("\n"+ player.getPlayerMonsters()[idmonster].getName() + "est KO");
+                System.out.println("\n"+ player.getPlayerMonsters()[idmonster].getName() + " est KO");
             }
         }
         else{
+            System.out.print("\n" + ANSI_GREEN +"UTILISER UN OBJET"+ ANSI_RESET +": [" + ANSI_RED + "O" + ANSI_RESET +"]: oui "+"[" + ANSI_RED + "N"  + ANSI_RESET +"]: non ");
+            repString = sc.nextLine();
+            if(repString.equals("O")){
+                //TO DO
+            }
+            else{
 
+            }
+            System.out.print("\n");
+            for (int i=0; i<4; i++) {
+                System.out.println("[" + ANSI_RED + i + ANSI_RESET + "] " + ANSI_CYAN + player.getInUseMonster().getAttacks()[i] + ANSI_RESET);
+            }
+            System.out.print("\n  " + ANSI_GREEN + "Veuillez saisir un id d'attaque:" + ANSI_RESET + " ");
+            repString = sc.nextLine();
+            int idattack = Integer.parseInt(repString);
+            player.getInUseMonster().setInUseAttack(player.getInUseMonster().getAttacks()[idattack]);
         }
-        System.out.print("\n" + ANSI_GREEN +"UTILISER UN OBJECT"+ ANSI_RESET +": [" + ANSI_RED + "O" + ANSI_RESET +"]: oui "+"[" + ANSI_RED + "N"  + ANSI_RESET +"]: non ");
-        repString = sc.nextLine();
-        if(repString.equals("O")){
-            //TO DO
-        }
-        else{
-
-        }
+        
 
     }
 }
