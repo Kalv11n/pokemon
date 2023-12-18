@@ -19,11 +19,9 @@ public class Player {
         for (int i = 0; i < this.playerMonsters.length; i++) {
             if (this.playerMonsters[i] == null) {
                 this.playerMonsters[i] = newMonster;
-                System.out.println("Monstre ajouté");
                 return;
             }
         }
-        System.out.println("La liste est pleine");
     }
 
     public Monster[] getPlayerMonsters(){

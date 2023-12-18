@@ -26,42 +26,52 @@ public class Explorer {
     }
 
     private void init(){
-        Asciiart draw = new Asciiart();
-        draw.draw();
+        System.out.println("======== Pokémon ========") ;
         for(Player player : players){
-            System.out.println(ANSI_RED +"==========Player " + player.getId() + "========="+ ANSI_RESET);
-            System.out.println("=====Choose 3 Monster======");
+            System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
+            System.out.println("== CHOISISSEZ 3 POKEMONS ==\n");
+
             int nbMonster = Monster.findAll().size();
             for(int i=1; i <= nbMonster; i++){
-                System.out.println("[" + i + "]\t" + Monster.find(i));
+                System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + Monster.find(i));
             }
 
             for(int i=0; i < 3; i++){
-                System.out.println(ANSI_GREEN + "Veuillez saisir un id de monstre:" + ANSI_RESET);
+                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre:" + ANSI_RESET + " ");
                 String monsterString = sc.nextLine();
-
+                
                 int idmonster = Integer.parseInt(monsterString);
                 Monster monster = Monster.find(idmonster);
                 player.addMonster(monster);
+                
+                System.out.println(ANSI_PURPLE + "-> " + monster.getName() + ANSI_RESET +"\n");
+
                 List<Attack> attacks = Attack.findByType(monster.getType());
-                System.out.println(attacks.size());
+                
                 for(int j=0; j < attacks.size(); j++){
-                    System.out.println("[" + (j + 1) + "]\t" + attacks.get(j));
+                    System.out.println("[" + ANSI_RED +  (j + 1) + ANSI_RESET + "]\t" + attacks.get(j));
                 }
+
                 for(int j=0; j < 4; j++){
-                    System.out.println("Veuillez saisir un id d'attaque:");
+                    System.out.print("\n  " + ANSI_GREEN + "Veuillez saisir un id d'attaque:" + ANSI_RESET + " ");
                     String attackString = sc.nextLine();
+
                     int id = Integer.parseInt(attackString);
                     Attack attack = attacks.get(id - 1);
                     monster.setAttackInCollection(attack, j);
+
+                    System.out.println("  " + ANSI_PURPLE + "-> " + attack.getName() + ANSI_RESET);
                 }
             }
 
             Monster[] deck = player.getPlayerMonsters();
-            System.out.println("Ton deck");
+            System.out.println(ANSI_GREEN + "\n\nTon deck:" + ANSI_RESET + "\n");
             for(int i=0; i < deck.length; i++){
-                System.out.println(deck[i].toStringWithAttacks());
+                System.out.println(ANSI_CYAN + "-> " + deck[i].toStringWithAttacks() + ANSI_RESET);
             }
         }   
+
+        System.out.println(ANSI_PURPLE + "\nLe terrain est neutre.\n");
+        System.out.println(ANSI_RED + "======== LE JEU VA COMMENCER =======" + ANSI_RESET + "\n");
     }
 }

@@ -4,7 +4,7 @@ public class TypeElectric extends Type {
     private float paralysis;
 
     public TypeElectric() {
-
+        this.setName("Electric");
     }
 
     public float getParalysis() {

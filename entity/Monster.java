@@ -67,21 +67,38 @@ public class Monster extends Card{
 
     @Override
     public String toString() {
-        if (name.length() < 8) {
-            return this.name + "\t\t[hp=" + hp + ", speed=" + speed + ", attack=" + attack + ", defense=" + defense + "]";
+        String output = "(" + this.getType().getName() + ")\t";
+
+        if (this.getType().getName().length() < 6) {
+            output += "\t";
         } 
 
-        return this.name + "\t[hp=" + hp + ", speed=" + speed + /*", attacks="
-                + Arrays.toString(attacks) + */", attack=" + attack + ", defense=" + defense + "]";
+        output += this.name + "\t";
+
+        if (name.length() < 8) {
+            output += "\t";
+        }
+
+        output += "[hp=" + hp + ", speed=" + speed + ", attack=" + attack + ", defense=" + defense + "]";
+
+        return output; 
     }   
-    public String toStringWithAttacks() {
-        if (name.length() < 8) {
-            return this.name + "\t\t[hp=" + hp + ", speed=" + speed + ", attack=" + attack + ", defense=" + defense + "]" + "\n\t\t" + attacks[0].getName() +", " + attacks[1].getName() +", " + attacks[2].getName() +", " + attacks[3].getName()+ "]";
-        } 
 
-        return this.name + "\t[hp=" + hp + ", speed=" + speed + /*", attacks="
-                + Arrays.toString(attacks) + */", attack=" + attack + ", defense=" + defense + "]" + "\n\t\t[" + attacks[0].getName() +", " + attacks[1].getName() +", " + attacks[2].getName() +", " + attacks[3].getName()+ "]";
+    public String toStringWithAttacks() {
+        String output = "(" + this.getType().getName() + ")\t";
+
+        output += this.name + "\t";
+
+        if (name.length() < 8) {
+            output += "\t";
+        }
+
+        output += "[hp=" + hp + ", speed=" + speed + ", attack=" + attack + ", defense=" + defense + "]"
+            + "\tAttacks: [" + attacks[0].getName() +", " + attacks[1].getName() +", " + attacks[2].getName() +", " + attacks[3].getName()+ "]";
+
+        return output;
     }  
+
     //---- Others
     public static Monster find(int position) {
         return monsters.get(position - 1);
