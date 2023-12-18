@@ -13,6 +13,7 @@ import entity.types.TypeNature;
 import entity.types.TypeNormal;
 import entity.types.TypePlant;
 import entity.types.TypeWater;
+import exception.InstanciatorErrorException;
 
 public abstract class Instanciator {
     
@@ -28,7 +29,6 @@ public abstract class Instanciator {
                 }
             }
 
-            // Remontez d'une classe dans la hiérarchie
             objClass = objClass.getSuperclass();
         }
 
@@ -45,7 +45,7 @@ public abstract class Instanciator {
         return random.nextInt((intervalLast - intervalFirst) + 1) + intervalFirst;
     }
 
-    public void selectType(Card card, String arg) throws Exception {
+    public void selectType(Card card, String arg) throws InstanciatorErrorException {
         switch (arg) {
             case "Electric":
                 card.setType(new TypeElectric());
@@ -80,21 +80,21 @@ public abstract class Instanciator {
                 break;
             
             default:
-                throw new Exception("Undefined type '" + arg + "'");
+                throw new InstanciatorErrorException("Undefined type '" + arg + "'");
         }
     }
 
-    public void setTypeAttribute(Card card, String attributeName, String attributeValue) throws Exception {
+    public void setTypeAttribute(Card card, String attributeName, String attributeValue) throws InstanciatorErrorException {
         Type type = card.getType();
 
         if (type == null) {
-            throw new Exception("Error configuration: Card type not initialized.");
+            throw new InstanciatorErrorException("Error configuration: Card type not initialized.");
         }
 
         switch (attributeName) {
             case "Paralysis": // TypeElectric
                 if (!(card.getType() instanceof TypeElectric)) {
-                    throw new Exception("Error configuration : Undefined '" + attributeName + "' attribute for TypeElectric::class");
+                    throw new InstanciatorErrorException("Error configuration : Undefined '" + attributeName + "' attribute for TypeElectric::class");
                 }
 
                 TypeElectric elec = (TypeElectric) card.getType();
@@ -104,7 +104,7 @@ public abstract class Instanciator {
             
             case "Hide": // TypeEarth
                 if (!(card.getType() instanceof TypeEarth)) {
-                    throw new Exception("Error configuration : Undefined '" + attributeName + "' attribute for TypeEarth::class");
+                    throw new InstanciatorErrorException("Error configuration : Undefined '" + attributeName + "' attribute for TypeEarth::class");
                 }
 
                 TypeEarth earth = (TypeEarth) card.getType();
@@ -114,7 +114,7 @@ public abstract class Instanciator {
 
             case "Burn": // TypeFire
                 if (!(card.getType() instanceof TypeFire)) {
-                    throw new Exception("Error configuration : Undefined '" + attributeName + "' attribute for TypeFire::class");
+                    throw new InstanciatorErrorException("Error configuration : Undefined '" + attributeName + "' attribute for TypeFire::class");
                 }
 
                 TypeFire fire = (TypeFire) card.getType();
@@ -124,7 +124,7 @@ public abstract class Instanciator {
             
             case "Poison": // TypeInsect
                 if (!(card.getType() instanceof TypeInsect)) {
-                    throw new Exception("Error configuration : Undefined '" + attributeName + "' attribute for TypeInsect::class");
+                    throw new InstanciatorErrorException("Error configuration : Undefined '" + attributeName + "' attribute for TypeInsect::class");
                 }
 
                 TypeInsect insect = (TypeInsect) card.getType();
@@ -134,7 +134,7 @@ public abstract class Instanciator {
 
             case "Cure": // TypePlant
                 if (!(card.getType() instanceof TypePlant)) {
-                    throw new Exception("Error configuration : Undefined '" + attributeName + "' attribute for TypePlant::class");
+                    throw new InstanciatorErrorException("Error configuration : Undefined '" + attributeName + "' attribute for TypePlant::class");
                 }
 
                 TypePlant plant = (TypePlant) card.getType();
@@ -144,7 +144,7 @@ public abstract class Instanciator {
             
             case "Flood": // TypeWater
                 if (!(card.getType() instanceof TypeWater)) {
-                    throw new Exception("Error configuration : Undefined '" + attributeName + "' attribute for TypeWater::class");
+                    throw new InstanciatorErrorException("Error configuration : Undefined '" + attributeName + "' attribute for TypeWater::class");
                 }
 
                 TypeWater water = (TypeWater) card.getType();
@@ -154,7 +154,7 @@ public abstract class Instanciator {
             
             case "Fall": // TypeWater
                 if (!(card.getType() instanceof TypeWater)) {
-                    throw new Exception("Error configuration : Undefined '" + attributeName + "' attribute for TypeWater::class");
+                    throw new InstanciatorErrorException("Error configuration : Undefined '" + attributeName + "' attribute for TypeWater::class");
                 }
 
                 TypeWater water2 = (TypeWater) card.getType();
@@ -163,7 +163,7 @@ public abstract class Instanciator {
                 break;
 
             default:
-                throw new Exception("Error configuration: Unknown attribute '" + attributeName + "' for Type::class");
+                throw new InstanciatorErrorException("Error configuration: Unknown attribute '" + attributeName + "' for Type::class");
         }
     }
 }

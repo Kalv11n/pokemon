@@ -1,11 +1,13 @@
 package reader;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import entity.Attack;
 import entity.Monster;
+import exception.ConfigurationErrorException;
+import exception.InstanciatorErrorException;
 import instanciator.AttackInstanciator;
 import instanciator.MonsterInstanciator;
 import parser.ConfigParser;
@@ -21,155 +23,172 @@ public class ConfigReader {
         this.parser = parser;
     }
 
-    public void read(String filename) throws Exception {
-        switch (filename) {
-            case "attack":
-                this.file = new File(DIR + "/attack.config");
-                break;
-
-            case "monster":
-                this.file = new File(DIR + "/monster.config");
-                break;
-            
-            case "object":
-                this.file = new File(DIR + "/object.config");
-                break;
-            
-            case "state":
-                this.file = new File(DIR + "/state.config");
-                break;
-            
-            default:
-                throw new Exception("Invalid configuration filename.");
-        }
-
-        this.scanner = new Scanner(this.file);
-        
-        switch (filename) {
-            case "attack":
-                this.readAttack();
-                break;
-
-            case "monster":
-                this.readMonster();
-                break;
-            
-            case "object":
-                this.readObject();
-                break;
-            
-            case "state":
-                this.readState();
-                break;
-            
-            default:
-                throw new Exception("Invalid configuration filename.");
-        }
-
-        this.scanner.close();
-    }
-
-    private void readMonster() throws Exception {
+    public void read(String filename) {
         try {
-            Monster monster = null;
-            String line;
-            boolean createMonster = false;
+            switch (filename) {
+                case "attack":
+                    this.file = new File(DIR + "/attack.config");
+                    break;
 
-            while (this.scanner.hasNextLine()) {
-                line = this.scanner.nextLine();
-
-                if (line.equals("")) {
-                    continue;
-                }
-
-                switch (line) {
-                    case "Monster":
-                        if (createMonster) {
-                            throw new Exception("Monster never ended");
-                        }
-
-                        createMonster = true;
-                        monster = new Monster();
-                        
-                        break;
+                case "monster":
+                    this.file = new File(DIR + "/monster.config");
+                    break;
                 
-                    case "EndMonster" :
-                        if (!createMonster) {
-                            throw new Exception("Monster never created");
-                        }
-
-                        createMonster = false;
-
-                        break;
-
-                    default:
-                        if (monster == null) {
-                            throw new Exception("Value not affected to a monster");
-                        }
-
-                        String[] args = this.parser.parse(line);
-
-                        MonsterInstanciator monsterInstanciator = new MonsterInstanciator();
-                        monsterInstanciator.implement(monster, args);
-
-                        break;
-                }
+                case "object":
+                    this.file = new File(DIR + "/object.config");
+                    break;
+                
+                case "state":
+                    this.file = new File(DIR + "/state.config");
+                    break;
+                
+                default:
+                    throw new ConfigurationErrorException("Invalid configuration filename.");
             }
 
-        } catch(IOException e) {
-            e.printStackTrace();
+            this.scanner = new Scanner(this.file);
+            
+            switch (filename) {
+                case "attack":
+                    this.readAttack();
+                    break;
+
+                case "monster":
+                    this.readMonster();
+                    break;
+                
+                case "object":
+                    this.readObject();
+                    break;
+                
+                case "state":
+                    this.readState();
+                    break;
+                
+                default:
+                    throw new ConfigurationErrorException("Invalid configuration filename.");
+            }
+
+            this.scanner.close();
+        } catch (InstanciatorErrorException e) {
+            System.err.println(e.getMessage());
+        } catch (ConfigurationErrorException e) {
+            System.err.println(e.getMessage());
+            System.exit(1);
+        } catch (FileNotFoundException e) {
+            System.err.println(e);
+            System.exit(1);
+        }
+    }
+
+    private void readMonster() throws ConfigurationErrorException {
+        Monster monster = null;
+        String line;
+        boolean implementingMonster = false;
+        boolean errorInitializationMonster = false;
+
+        while (this.scanner.hasNextLine()) {
+            line = this.scanner.nextLine();
+
+            if (line.equals("")) {
+                continue;
+            }
+
+            switch (line) {
+                case "Monster":                    
+                    errorInitializationMonster = false;
+                    implementingMonster = true;
+                    monster = new Monster();
+                    
+                    break;
+            
+                case "EndMonster" :
+                    if (errorInitializationMonster) {
+                        errorInitializationMonster = false;
+                    }
+
+                    monster = null;
+                    implementingMonster = false;
+
+                    break;
+
+                default:
+                    if (errorInitializationMonster) {
+                        continue;
+                    }
+
+                    if (!implementingMonster) {
+                        throw new ConfigurationErrorException("Monster after '" + Monster.findLast().getName() + "' not created");
+                    }
+
+                    String[] args = this.parser.parse(line);
+
+                    MonsterInstanciator monsterInstanciator = new MonsterInstanciator();
+
+                    try {
+                        monsterInstanciator.implement(monster, args);
+                    } catch(InstanciatorErrorException e) {
+                        Monster.removeLast();
+                        errorInitializationMonster = true;
+                    }
+
+                    break;
+            }
         }
     } 
 
-    private void readAttack() throws Exception {
-        try {
-            Attack attack = null;
-            String line;
-            boolean createAttack = false;
+    private void readAttack() throws ConfigurationErrorException, InstanciatorErrorException {
+        Attack attack = null;
+        String line;
+        boolean implementingAttack = false;
+        boolean errorInitializationAttack = false;
 
-            while (this.scanner.hasNextLine()) {
-                line = this.scanner.nextLine();
+        while (this.scanner.hasNextLine()) {
+            line = this.scanner.nextLine();
 
-                if (line.equals("")) {
-                    continue;
-                }
-
-                switch (line) {
-                    case "Attack":
-                        if (createAttack) {
-                            throw new Exception("Attack never ended");
-                        }
-
-                        createAttack = true;
-                        attack = new Attack();
-                        
-                        break;
-                
-                    case "EndAttack" :
-                        if (!createAttack) {
-                            throw new Exception("Attack never created");
-                        }
-
-                        createAttack = false;
-
-                        break;
-
-                    default:
-                        if (attack == null) {
-                            throw new Exception("Value not affected to an attack");
-                        }
-
-                        String[] args = this.parser.parse(line);
-                        
-                        AttackInstanciator attackInstanciator = new AttackInstanciator();
-                        attackInstanciator.implement(attack, args);
-
-                        break;
-                }
+            if (line.equals("")) {
+                continue;
             }
 
-        } catch(IOException e) {
-            e.printStackTrace();
+            switch (line) {
+                case "Attack":
+                    implementingAttack = true;
+                    attack = new Attack();
+                    
+                    break;
+            
+                case "EndAttack" :
+                    if (errorInitializationAttack) {
+                        errorInitializationAttack = false;
+                    }
+
+                    attack = null;
+                    implementingAttack = false;
+
+                    break;
+
+                default:
+                    if (errorInitializationAttack) {
+                        continue;
+                    }
+
+                    if (!implementingAttack) {
+                        throw new ConfigurationErrorException("Attack after '" + Attack.findLast().getName() + "' not created");
+                    }
+
+                    String[] args = this.parser.parse(line);
+                    
+                    AttackInstanciator attackInstanciator = new AttackInstanciator();
+
+                    try {
+                        attackInstanciator.implement(attack, args);
+                    } catch(InstanciatorErrorException e) {
+                        Attack.removeLast();
+                        errorInitializationAttack = true;
+                    }
+
+                    break;
+            }
         }
     }
 
