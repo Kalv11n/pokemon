@@ -134,7 +134,7 @@ public class ConfigReader {
 
                     break;
             }
-        }
+        }    
     } 
 
     private void readAttack() throws ConfigurationErrorException, InstanciatorErrorException {

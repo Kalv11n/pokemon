@@ -29,12 +29,12 @@ public class Explorer {
         this.sc  = new Scanner(System.in);
 
         this.init();
+
+        this.sc.close();
     }
 
     private void init(){
         String choice;
-
-        System.out.println("======== Pokémon ========") ;
 
         for(Player player : players){
             System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
@@ -89,14 +89,14 @@ public class Explorer {
         players[0].setInUseMonster(players[0].getPlayerMonsters()[0]);
         players[1].setInUseMonster(players[1].getPlayerMonsters()[0]);
         boolean launch = true;
-        while(launch){
+        // while(launch){
             play(players[0]);
             play(players[1]);
             if(players[1].getInUseMonster().getSpeed() > players[0].getInUseMonster().getSpeed()){
                     System.out.println("\n" + ANSI_RED +"======== JOUEUR " + players[1].getId() + " PREND L'AVANTAGE========"+ ANSI_RESET);
 
             }
-        }
+        // }
         
     }
 
@@ -139,9 +139,5 @@ public class Explorer {
         }
         
 
-    }
-
-    private void start() {
-        
     }
 }

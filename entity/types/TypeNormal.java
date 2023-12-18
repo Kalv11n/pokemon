@@ -2,7 +2,7 @@ package entity.types;
 
 public class TypeNormal extends Type {
     public TypeNormal() {
-        super(new TypeNormal(), new TypeNormal());
+        super("Normal", "Normal");
         this.setName("Normal");
     }
 }

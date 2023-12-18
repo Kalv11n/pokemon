@@ -2,12 +2,10 @@ package entity.types;
 
 public abstract class Type {
     private String name;
-    private Type advantageType;
-    private Type weaknessType;
+    private String advantageType;
+    private String weaknessType;
 
-    public final String[] nameType = { "Earth", "Electric", "Fire", "Nature", "Water" };
-
-    public Type(Type advantageType, Type weaknessType) {
+    public Type(String advantageType, String weaknessType) {
         this.advantageType = advantageType;
         this.weaknessType = weaknessType;
     }
@@ -20,11 +18,19 @@ public abstract class Type {
         this.name = name;
     }
 
-    public Type getAdvantageType(){
+    public String getAdvantageType(){
         return this.advantageType;
     } 
 
-    public Type getWeaknessType(){
+    public void setAdvantageType(String type) {
+        this.advantageType = type;
+    }
+
+    public String getWeaknessType(){
         return this.weaknessType;
+    }
+
+    public void setWeaknessType(String type) {
+        this.weaknessType = type;
     }
 }

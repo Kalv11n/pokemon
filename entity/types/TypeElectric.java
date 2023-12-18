@@ -4,7 +4,7 @@ public class TypeElectric extends Type {
     private float paralysis;
 
     public TypeElectric() {
-        super(new TypeWater(), new TypeEarth());
+        super("Water", "Earth");
         this.setName("Electric");
     }
 

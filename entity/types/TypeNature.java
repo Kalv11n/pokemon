@@ -2,7 +2,7 @@ package entity.types;
 
 public class TypeNature extends Type{
     public TypeNature() {
-        super(new TypeEarth(), new TypeFire());
+        super("Earth", "Fire");
         this.setName("Terre");
     }
 }

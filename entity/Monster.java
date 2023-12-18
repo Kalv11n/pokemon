@@ -2,7 +2,6 @@ package entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import entity.state.NormalState;
 import entity.state.State;
@@ -166,11 +165,11 @@ public class Monster extends Card{
     }
 
     public boolean hasAdvantage(Monster monster) {
-        return (this.getType().getAdvantageType().getClass() == monster.getType().getClass());
+        return (this.getType().getAdvantageType() == monster.getType().getName());
     }
 
     public boolean hasWeakness(Monster monster) {
-        return (this.getType().getWeaknessType().getClass() == monster.getType().getClass());
+        return (this.getType().getWeaknessType() == monster.getType().getName());
     }
 
 

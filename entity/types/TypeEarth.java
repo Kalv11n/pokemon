@@ -4,7 +4,7 @@ public class TypeEarth extends Type{
     private float hide;
     
     public TypeEarth() {
-        super(new TypeElectric(), new TypeNature());
+        super("Electric", "Nature");
         this.setName("Terre");
     }
 
@@ -14,7 +14,5 @@ public class TypeEarth extends Type{
 
     public void setHide(float hide) {
         this.hide = hide;
-    }
-
-    
+    }    
 }
