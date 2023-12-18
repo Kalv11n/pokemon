@@ -2,7 +2,7 @@ public class Asciiart {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_YELLOW = "\u001B[33m";
 
-    public void draw(){
+    public static void draw(){
         System.out.println(ANSI_CYAN);
         System.out.println("                _,........__");
         System.out.println("            ,-'            \"`-.");

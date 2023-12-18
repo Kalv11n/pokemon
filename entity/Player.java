@@ -4,7 +4,7 @@ public class Player {
     public static int playerId;
     private int id;
     private Monster[] playerMonsters;
-
+    private Monster inUseMonster;
     public Player() {
         this.playerMonsters = new Monster[3];
         playerId++;
@@ -26,6 +26,14 @@ public class Player {
 
     public Monster[] getPlayerMonsters(){
         return this.playerMonsters;
+    }
+
+    public Monster getInUseMonster(){
+        return this.inUseMonster;
+    }
+
+    public void setInUseMonster(Monster monster){
+        this.inUseMonster = monster;
     }
 
 }
