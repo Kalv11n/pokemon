@@ -26,7 +26,8 @@ public class Explorer {
     }
 
     private void init(){
-        System.out.println("==========Pokémon==========") ;
+        Asciiart draw = new Asciiart();
+        draw.draw();
         for(Player player : players){
             System.out.println(ANSI_RED +"==========Player " + player.getId() + "========="+ ANSI_RESET);
             System.out.println("=====Choose 3 Monster======");
