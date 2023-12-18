@@ -4,14 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.types.Type;
-import entity.types.TypeEarth;
-import entity.types.TypeElectric;
-import entity.types.TypeFire;
-import entity.types.TypeInsect;
-import entity.types.TypeNature;
 import entity.types.TypeNormal;
-import entity.types.TypePlant;
-import entity.types.TypeWater;
 
 public class Attack extends Card {
     private static List<Attack> attacks = new ArrayList<Attack>();

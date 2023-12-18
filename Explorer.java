@@ -15,14 +15,22 @@ public class Explorer {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
-    private Scanner sc = new Scanner(System.in);
+
+    private Scanner sc;
     private Player[] players = {new Player(), new Player()};
+    private boolean terrainFlooded = false;
+
     public Explorer() {
 
     }
     
     public void run(){
+        this.sc  = new Scanner(System.in);
+
         this.init();
+        this.start();
+
+        this.sc.close();
     }
 
     private void init(){
@@ -73,5 +81,9 @@ public class Explorer {
 
         System.out.println(ANSI_PURPLE + "\nLe terrain est neutre.\n");
         System.out.println(ANSI_RED + "======== LE JEU VA COMMENCER =======" + ANSI_RESET + "\n");
+    }
+
+    private void start() {
+        
     }
 }
