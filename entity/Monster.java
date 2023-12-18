@@ -11,6 +11,7 @@ public class Monster extends Card{
     private Attack[] attacks;
     private int attack;
     private int defense;
+    private Attack inUseAttack;
 
     public Monster() {
         this.attacks = new Attack[4];
@@ -63,6 +64,14 @@ public class Monster extends Card{
 
     public void setDefense(int defense) {
         this.defense = defense;
+    }
+
+    public Attack getInUseAttack(){
+        return this.inUseAttack;
+    }
+
+    public void setInUseAttack(Attack attack){
+        this.inUseAttack = attack;
     }
 
     @Override
