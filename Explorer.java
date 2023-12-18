@@ -15,16 +15,16 @@ public class Explorer {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
-    private Scanner sc;
+    private Scanner sc = new Scanner(System.in);
     private Player[] players = {new Player(), new Player()};
+    private boolean terrainFlooded = false;
+
     public Explorer() {
 
     }
     
     public void run(){
-        this.sc = new Scanner(System.in);
         this.init();
-        this.sc.close();
     }
 
     private void init(){
@@ -130,5 +130,9 @@ public class Explorer {
         }
         
 
+    }
+
+    private void start() {
+        
     }
 }
