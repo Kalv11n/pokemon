@@ -1,4 +1,4 @@
-package entity;
+package entity.state;
 
 public class State {
     

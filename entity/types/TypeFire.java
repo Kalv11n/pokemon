@@ -4,6 +4,7 @@ public class TypeFire extends Type{
     private float burn;
 
     public TypeFire() {
+        super("Nature", "Water");
         this.setName("Feu");
     }
 

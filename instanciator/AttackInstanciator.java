@@ -1,12 +1,13 @@
 package instanciator;
 
 import entity.Attack;
+import exception.InstanciatorErrorException;
 
 public class AttackInstanciator extends Instanciator {
 
-    public void implement(Attack attack, String[] args) throws Exception {
+    public void implement(Attack attack, String[] args) throws InstanciatorErrorException {
         if (attack == null) {
-            throw new Exception("Value not affected to an attack");
+            throw new InstanciatorErrorException("Value not affected to an attack");
         }
 
         String attributeName = args[0];
@@ -22,7 +23,7 @@ public class AttackInstanciator extends Instanciator {
         this.setAttackAttribute(attack, attributeName, attributeValue);
     }
 
-    private void setAttackAttribute(Attack attack, String attributeName, String attributeValue) throws Exception {
+    private void setAttackAttribute(Attack attack, String attributeName, String attributeValue) throws InstanciatorErrorException {
         switch (attributeName) {
             case "Name":
                 attack.setName(attributeValue);
@@ -46,7 +47,7 @@ public class AttackInstanciator extends Instanciator {
                 break;
 
             default:
-                throw new Exception("Error configuration: Unknown attribute '" + attributeName + "' for Attack::class");
+                throw new InstanciatorErrorException("Error configuration: Unknown attribute '" + attributeName + "' for Attack::class");
         }
     }
 }

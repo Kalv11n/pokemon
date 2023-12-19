@@ -1,12 +1,13 @@
 package instanciator;
 
 import entity.Monster;
+import exception.InstanciatorErrorException;
 
 public class MonsterInstanciator extends Instanciator {
 
-    public void implement(Monster monster, String[] args) throws Exception {
+    public void implement(Monster monster, String[] args) throws InstanciatorErrorException {
         if (monster == null) {
-            throw new Exception("Value not affected to a monster");
+            throw new InstanciatorErrorException("Value not affected to a monster");
         }
 
         String attributeName = args[0];
@@ -22,7 +23,7 @@ public class MonsterInstanciator extends Instanciator {
         this.setMonsterAttribute(monster, attributeName, args);
     }
 
-    private void setMonsterAttribute(Monster monster, String attributeName, String[] attributeValue) throws Exception {
+    private void setMonsterAttribute(Monster monster, String attributeName, String[] attributeValue) throws InstanciatorErrorException {
         switch (attributeName) {
             case "Name":
                 monster.setName(attributeValue[1]);
@@ -50,7 +51,7 @@ public class MonsterInstanciator extends Instanciator {
                 break;
 
             default:
-                throw new Exception("Error configuration: Unknown attribute '" + attributeName + "' for Monster::class");
+                throw new InstanciatorErrorException("Error configuration: Unknown attribute '" + attributeName + "' for Monster::class");
         }
     }
 }
