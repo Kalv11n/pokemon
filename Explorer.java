@@ -18,7 +18,7 @@ public class Explorer {
     private Scanner sc;
     private InputReader reader;
     private Player[] players = {new Player(), new Player()};
-    private boolean terrainFlooded = false;
+    private FloodedState flooded;
 
     public Explorer() {
 
