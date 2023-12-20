@@ -14,12 +14,15 @@ public class Monster extends Card{
     private Attack[] attacks;
     private int attack;
     private int defense;
+    // Others
     private Attack inUseAttack;
     private State currentState;
+    private int dammageReceived;
 
     public Monster() {
         this.currentState = new NormalState();
         this.attacks = new Attack[4];
+        this.dammageReceived = 0;
         monsters.add(this);
     }
 
@@ -153,10 +156,16 @@ public class Monster extends Card{
 
         // Make dammage
         monster.reduceHp((int) Math.round(dammage));
+
+        // Capacity
+        // TODO monster.setState(new State);
+
         return true;
     }
 
     public void reduceHp(int dammage) {
+        this.setDamageReceived(dammage);
+
         if (this.hp - dammage < 0) {
             this.hp = 0;
         } else {
@@ -170,6 +179,14 @@ public class Monster extends Card{
 
     public boolean hasWeakness(Monster monster) {
         return (this.getType().getWeaknessType() == monster.getType().getName());
+    }
+
+    public int getDammageReceived() {
+        return this.dammageReceived;
+    }
+
+    public void setDamageReceived(int dammage) {
+        this.dammageReceived = dammage;
     }
 
 
