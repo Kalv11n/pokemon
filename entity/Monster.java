@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entity.state.BurnedState;
+import entity.state.FloodedGroundState;
 import entity.state.HealthState;
 import entity.state.HidedState;
 import entity.state.NormalState;
@@ -156,25 +157,41 @@ public class Monster extends Card{
         if (this.getCurrentState() instanceof NormalState) {
             damage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * damageCoef * randomCoef;
         }
-        // Others State
-        // TODO
 
-        // Fail attack
-        if (!this.failAttack(false)) {
-            // Make damage
-            monster.reduceHp((int) Math.round(damage));
+        // Flooded condition
+        boolean fall = false;
+        if (FloodedGroundState.flooded && !(monster.getType() instanceof TypeWater)) { // All apart Water Type
+            double fallRate = Math.random();
 
-            // Capacity
-            // System.out.println(this.getCapacity());
-            if (this.getCapacity() != 0) { // Check if have a capacity rate
-                double randomCapacity = Math.random();
-                double capacityRate = this.getCapacity();
+            // if (fallRate <= (TypeWater) FloodedGroundState.monster.getFall()) { // TODO 
+            //     fall = true;
+            // }
+        }
 
-                // If capacity success
-                if (randomCapacity <= capacityRate) {
-                    this.applyCapacity(monster);
+        // Normal attack
+        if (!fall) {
+            // Fail attack
+            if (!this.failAttack(false)) {
+                // Make damage
+                monster.reduceHp((int) Math.round(damage));
+
+                // Capacity
+                if (this.getCapacity() != 0) { // Check if have a capacity rate
+                    double randomCapacity = Math.random();
+                    double capacityRate = this.getCapacity();
+
+                    // If capacity success
+                    if (randomCapacity <= capacityRate) {
+                        this.applyCapacity(monster);
+                    }
                 }
             }
+        } else { // Flooded failure
+            int damageReceived = (int) Math.round(damage * 0.25);
+            this.reduceHp(damageReceived);
+            System.out.println(this.getName() + " a glissé ! (Dégats subis : " + damageReceived + ")");
+
+            this.failAttack(true);
         }
 
         // Endure capacity
@@ -205,7 +222,9 @@ public class Monster extends Card{
             monster.setCurrentState(new BurnedState());
             System.out.println(this.getName() + " a brulé " + monster.getName() + " !");
         } else if (this.getType() instanceof TypeWater) {
-            // State.setFlooded(true);
+            // Flooded update
+            FloodedGroundState.setFlooded(true);
+            FloodedGroundState.updateFloodedTurn();
             System.out.println(this.getName() + " a innondé le terrain !");
         } else if (this.getType() instanceof TypeElectric) {
             monster.setCurrentState(new ParalyzedState());
@@ -217,7 +236,7 @@ public class Monster extends Card{
             monster.setCurrentState(new PoisonedState());
             System.out.println(this.getName() + " a empoisonné " + monster.getName() + " !");
         } else if (this.getType() instanceof TypeNature) {
-            if (State.flooded) { // Heal only if ground flooded
+            if (FloodedGroundState.flooded) { // Heal only if ground flooded
                 monster.setCurrentState(new HealthState());
             }
         } else if (this.getType() instanceof TypePlant) {

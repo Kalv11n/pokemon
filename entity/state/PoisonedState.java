@@ -6,7 +6,7 @@ public class PoisonedState extends State {
 
     @Override
     public void endureCapacity(Monster monster){
-        if(State.flooded) {
+        if(FloodedGroundState.flooded) {
             monster.setCurrentState(new NormalState());
             System.out.println(monster.getName() + " n'est plus empoisonné !");
         }

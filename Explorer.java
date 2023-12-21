@@ -4,6 +4,7 @@ import java.util.Scanner;
 import entity.Attack;
 import entity.Monster;
 import entity.Player;
+import entity.state.FloodedGroundState;
 import instanciator.ObjectInstanciator;
 import reader.InputReader;
 
@@ -93,7 +94,7 @@ public class Explorer {
                 printObjects();
                 // Select object
                 do {
-                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet:" + ANSI_RESET + " ");
+                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet: " + ANSI_RESET);
                     choice = sc.nextLine();
                     
                 } while(!this.reader.checkInterval(1, 4, choice));    
@@ -133,6 +134,11 @@ public class Explorer {
     private void play() {
         // Main loop
         do {
+            // Flooded instruction
+            if (FloodedGroundState.flooded) {
+                FloodedGroundState.decrementTurn();
+            }
+
             // Player interactions
             for (Player player : players) {
                 this.interact(player);
@@ -207,7 +213,7 @@ public class Explorer {
 
             // Check input
             do {
-                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'attaque:" + ANSI_RESET + " ");
+                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'attaque: " + ANSI_RESET);
                 choice = sc.nextLine();
 
             } while(!this.reader.checkInterval(1, (i + 1), choice));
@@ -253,7 +259,7 @@ public class Explorer {
 
                 // Check input
                 do {
-                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre:" + ANSI_RESET + "");
+                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre: " + ANSI_RESET);
                     choice = sc.nextLine();
 
                 } while(!this.reader.checkInterval(1, (i + 1), choice));
@@ -265,6 +271,11 @@ public class Explorer {
                     System.out.println("\n" + ANSI_RED + monster.getName() + " est KO !" +  ANSI_RESET);
                     changeApproved = false;
                     continue;
+                }
+
+                // Check flooder monster
+                if (FloodedGroundState.monster == player.getInUseMonster()) {
+                    FloodedGroundState.killFlood();
                 }
 
                 // Update in use monster
@@ -285,8 +296,6 @@ public class Explorer {
 
         } while(!this.reader.checkChoice(availableChoices, choice));
 
-        System.out.println(); // TMP
-
         // Use object
         if(choice.toUpperCase().equals("O")){
             int i = 0;
@@ -295,7 +304,7 @@ public class Explorer {
             }
             // Check input
             do {
-                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet:" + ANSI_RESET + "");
+                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet: " + ANSI_RESET);
                 choice = sc.nextLine();
 
             } while(!this.reader.checkInterval(1, (i + 1), choice));
@@ -330,8 +339,6 @@ public class Explorer {
     }
 
     public void printObjects() {
-        System.out.println();
-        
         for(int i=1; i <= entity.objects.Object.objects.size(); i++){
             System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + entity.objects.Object.find((i - 1)));
         }
