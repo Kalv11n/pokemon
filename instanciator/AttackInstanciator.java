@@ -3,7 +3,7 @@ package instanciator;
 import entity.Attack;
 import exception.InstanciatorErrorException;
 
-public class AttackInstanciator extends Instanciator {
+public class AttackInstanciator extends CardInstanciator {
 
     public void implement(Attack attack, String[] args) throws InstanciatorErrorException {
         if (attack == null) {

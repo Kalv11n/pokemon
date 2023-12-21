@@ -7,5 +7,8 @@ public class State {
 
     }
 
+    public static void setFlooded(boolean flooded){
+        State.flooded = flooded;
+    }
     
 }

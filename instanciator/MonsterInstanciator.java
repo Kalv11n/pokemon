@@ -3,7 +3,7 @@ package instanciator;
 import entity.Monster;
 import exception.InstanciatorErrorException;
 
-public class MonsterInstanciator extends Instanciator {
+public class MonsterInstanciator extends CardInstanciator {
 
     public void implement(Monster monster, String[] args) throws InstanciatorErrorException {
         if (monster == null) {
