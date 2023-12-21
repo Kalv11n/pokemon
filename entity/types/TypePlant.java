@@ -4,7 +4,8 @@ public class TypePlant extends TypeNature {
     private float cure;
 
     public TypePlant() {
-        this.setName("Plante");
+        this.setName("Plant");
+        this.cure = 0;
     }
 
     public float getCure() {

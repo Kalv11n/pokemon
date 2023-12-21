@@ -4,6 +4,7 @@ import java.util.Scanner;
 import entity.Attack;
 import entity.Monster;
 import entity.Player;
+import entity.state.FloodedGroundState;
 import instanciator.ObjectInstanciator;
 import reader.InputReader;
 
@@ -58,7 +59,7 @@ public class Explorer {
                 } while(!this.reader.checkInterval(1, Monster.findAll().size(), choice));    
                 
                 // Add monster to player monsters
-                Monster monster = Monster.find(Integer.parseInt(choice));
+                Monster monster = Monster.find(Integer.parseInt(choice) - 1);
                 player.addMonster(monster);
                 
                 System.out.println(ANSI_PURPLE + "-> " + monster.getName() + ANSI_RESET +"\n");
@@ -93,7 +94,7 @@ public class Explorer {
                 printObjects();
                 // Select object
                 do {
-                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet:" + ANSI_RESET + " ");
+                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet: " + ANSI_RESET);
                     choice = sc.nextLine();
                     
                 } while(!this.reader.checkInterval(1, 4, choice));    
@@ -133,9 +134,14 @@ public class Explorer {
     private void play() {
         // Main loop
         do {
+            // Flooded instruction
+            if (FloodedGroundState.flooded) {
+                FloodedGroundState.decrementTurn();
+            }
+
             // Player interactions
             for (Player player : players) {
-                updateAction(player);
+                this.interact(player);
             }
 
             // Player distribution
@@ -166,43 +172,34 @@ public class Explorer {
                         + currentMonster.getInUseAttack().getName() + " !");
                     currentMonster.attack(ennemyMonster);
 
-                    System.out.println("C'est très efficace !");
-                    System.out.println("Dégats infligés : " + ennemyMonster.getDammageReceived());
+                    // Printer
+                    if (currentMonster.hasAdvantage(ennemyMonster)) {
+                        System.out.println("C'est très efficace !");
+                    } else if (currentMonster.hasWeakness(ennemyMonster)) {
+                        System.out.println("C'est n'est pas très efficace !");
+                    }
+
+                    System.out.println("Dégats infligés : " + ennemyMonster.getDamageReceived());
                     System.out.println(ennemyMonster.getName() + " (PV restants : " + ennemyMonster.getHp() + ")");
-                } else {
-                    player.setAllowAttacking(true);
-                }
+                } 
+                // else {
+                    // player.setAllowAttacking(true);
+                // }
             }
 
         } while (!this.haveWinner());
     }
 
     //---- Others
-    public void updateAction(Player player){
+    public void interact(Player player) {
         System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
         System.out.println("Monstre actuel : " + player.getInUseMonster().toString());  
-        boolean allowAttacking;
-
-        // Check monster is KO
-        if (player.getInUseMonster().getHp() == 0) {
-            allowAttacking = this.changeMonster(player);
-        } else { // Monster is available to fight
-            allowAttacking = this.interact(player);
-        }    
-
-        // Allow player to attack
-        if (allowAttacking) {
-            player.setAllowAttacking(true);
-        } else {
-            player.setAllowAttacking(false);
-        }
-    }
-
-    public boolean interact(Player player) {
         String choice;
 
         // Change monster
-        if (!this.changeMonster(player)) {
+        this.changeMonster(player);
+        
+        if (player.getAllowAttacking()) {
             // Not changing monster, maybe use an object
             this.useObject(player);
 
@@ -216,26 +213,18 @@ public class Explorer {
 
             // Check input
             do {
-                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'attaque:" + ANSI_RESET + " ");
+                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'attaque: " + ANSI_RESET);
                 choice = sc.nextLine();
 
             } while(!this.reader.checkInterval(1, (i + 1), choice));
             
             monster.setInUseAttack(monster.getAttacks()[Integer.parseInt(choice) - 1]);
-
-            // Allow attack
-            return true;
         }
-
-        // Has change monster, not allow attack
-        return false; 
     }
 
-    public boolean changeMonster(Player player) {
+    public void changeMonster(Player player) {
         String availableChoices = "ON";
         String choice = "O"; // Default to "O" to force changing if Monster is KO
-        boolean confirmChange; // If selected another KO monster
-        boolean hasChangingMonster = false; // If not KO, not allow attack after changing monster
 
         // If monster HP > 0, available choice oh changing monster
         if (player.getInUseMonster().getHp() != 0) {
@@ -244,14 +233,23 @@ public class Explorer {
                 choice = sc.nextLine();
 
             } while(!this.reader.checkChoice(availableChoices, choice));
+
+            if(choice.toUpperCase().equals("O")){
+                player.setAllowAttacking(false);
+            } else {
+                player.setAllowAttacking(true);
+            }
         } else {
             System.out.print("\n" + ANSI_RED + player.getInUseMonster().getName() + " est KO, vous devez changer de monstre." + ANSI_RESET + "\n");
+            player.setAllowAttacking(true);
         }
         
         // Change monster if is choiced or if monster HP = 0
         if(choice.toUpperCase().equals("O")){
+            boolean changeApproved; // If selected another KO monster
+
             do {
-                confirmChange = true;
+                changeApproved = true;
 
                 // Select new monster
                 int i = 0;
@@ -261,7 +259,7 @@ public class Explorer {
 
                 // Check input
                 do {
-                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre:" + ANSI_RESET + "");
+                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre: " + ANSI_RESET);
                     choice = sc.nextLine();
 
                 } while(!this.reader.checkInterval(1, (i + 1), choice));
@@ -271,20 +269,21 @@ public class Explorer {
                 // Check choiced monster is available
                 if(monster.getHp() == 0){
                     System.out.println("\n" + ANSI_RED + monster.getName() + " est KO !" +  ANSI_RESET);
-                    confirmChange = false;
+                    changeApproved = false;
                     continue;
+                }
+
+                // Check flooder monster
+                if (FloodedGroundState.monster == player.getInUseMonster()) {
+                    FloodedGroundState.killFlood();
                 }
 
                 // Update in use monster
                 System.out.println("\n" + ANSI_GREEN + monster.getName() + " ! A toi de jouer !" + ANSI_RESET);
                 player.setInUseMonster(monster);
-                
-                hasChangingMonster = true;
 
-            } while (!confirmChange);
+            } while (!changeApproved);
         }
-
-        return hasChangingMonster;
     }
 
     public void useObject(Player player) {
@@ -297,8 +296,6 @@ public class Explorer {
 
         } while(!this.reader.checkChoice(availableChoices, choice));
 
-        System.out.println(); // TMP
-
         // Use object
         if(choice.toUpperCase().equals("O")){
             int i = 0;
@@ -307,7 +304,7 @@ public class Explorer {
             }
             // Check input
             do {
-                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet:" + ANSI_RESET + "");
+                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet: " + ANSI_RESET);
                 choice = sc.nextLine();
 
             } while(!this.reader.checkInterval(1, (i + 1), choice));
@@ -321,11 +318,11 @@ public class Explorer {
 
     public boolean haveWinner() {
         if (this.players[0].allMonstersKO()) {
-            System.out.println("\n" + ANSI_GREEN +"Joueur " + players[0].getId() + ", tout les monstres sont KO." + ANSI_RESET + "\n");
+            System.out.println("\n" + ANSI_GREEN +"Joueur " + players[0].getId() + ", tous les monstres sont KO." + ANSI_RESET + "\n");
             System.out.println("\n" + ANSI_GREEN +"Joueur " + players[1].getId() + " à gagné !!!" + ANSI_RESET + "\n");
             return true;
         } else if(this.players[1].allMonstersKO()) {
-            System.out.println("\n" + ANSI_GREEN +"Joueur " + players[1].getId() + ", tout les monstres sont KO." + ANSI_RESET + "\n");
+            System.out.println("\n" + ANSI_GREEN +"Joueur " + players[1].getId() + ", tous les monstres sont KO." + ANSI_RESET + "\n");
             System.out.println("\n" + ANSI_GREEN +"Joueur " + players[0].getId() + " à gagné !!!" + ANSI_RESET + "\n");
             return true;
         }
@@ -337,13 +334,11 @@ public class Explorer {
         System.out.println();
         
         for(int i=1; i <= Monster.findAll().size(); i++){
-            System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + Monster.find(i));
+            System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + Monster.find((i - 1)));
         }
     }
 
     public void printObjects() {
-        System.out.println();
-        
         for(int i=1; i <= entity.objects.Object.objects.size(); i++){
             System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + entity.objects.Object.find((i - 1)));
         }

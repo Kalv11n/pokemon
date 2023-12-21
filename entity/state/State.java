@@ -1,14 +1,7 @@
 package entity.state;
 
-public class State {
-    public static boolean flooded = false;
+import entity.Monster;
 
-    public State(){
-
-    }
-
-    public static void setFlooded(boolean flooded){
-        State.flooded = flooded;
-    }
-    
+public abstract class State {    
+    public abstract void endureCapacity(Monster monster);
 }

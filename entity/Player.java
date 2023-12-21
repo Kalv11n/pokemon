@@ -1,7 +1,5 @@
 package entity;
 
-import java.util.ArrayList;
-
 public class Player {
     public static int playerId = 0;
     private int id;
@@ -32,7 +30,7 @@ public class Player {
     }
 
     public void addObject(entity.objects.Object newObject) {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < playerObjects.length; i++) {
             if (this.playerObjects[i] == null) {
                 this.playerObjects[i] = newObject;
                 return;
@@ -41,15 +39,16 @@ public class Player {
     }
 
     public void removeObject(int index) {
-        entity.objects.Object[] temp ;
-        int w = 0;
-        for(int i=0;i<playerObjects.length;i++){
-            if(i!=index){
-                temp[w] = playerObjects[i];
-                w++;
+        entity.objects.Object[] objects = new entity.objects.Object[playerObjects.length - 1];
+        int j = 0;
+
+        for(int i = 0; i < playerObjects.length; i++){
+            if(i != index){
+                objects[j] = playerObjects[i];
+                j++;
             }
         }
-        playerObjects = temp;
+        this.playerObjects = objects;
     }
 
     public Monster[] getPlayerMonsters(){
