@@ -18,7 +18,7 @@ public class Explorer {
     private Scanner sc;
     private InputReader reader;
     private Player[] players = {new Player(), new Player()};
-    private FloodedState flooded;
+    // private FloodedState flooded;
 
     public Explorer() {
 
@@ -39,14 +39,11 @@ public class Explorer {
 
         for(Player player : players){
             System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
-            System.out.println("== CHOISISSEZ 3 POKEMONS ==\n");
-
-            int nbMonster = Monster.findAll().size();
-            for(int i=1; i <= nbMonster; i++){
-                System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + Monster.find(i));
-            }
+            System.out.println("== CHOISISSEZ 3 POKEMONS ==");
 
             for(int i=0; i < 3; i++){
+                this.printMonsters();
+
                 // Select monster
                 do {
                     System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre:" + ANSI_RESET + " ");
@@ -59,6 +56,9 @@ public class Explorer {
                 player.addMonster(monster);
                 
                 System.out.println(ANSI_PURPLE + "-> " + monster.getName() + ANSI_RESET +"\n");
+
+                // Remove monster from list
+                Monster.remove(monster);
 
                 // Print attacks by type
                 List<Attack> attacks = Attack.findByType(monster.getType());
@@ -287,5 +287,13 @@ public class Explorer {
         }
 
         return false;
+    }
+
+    public void printMonsters() {
+        System.out.println();
+        
+        for(int i=1; i <= Monster.findAll().size(); i++){
+            System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + Monster.find(i));
+        }
     }
 }

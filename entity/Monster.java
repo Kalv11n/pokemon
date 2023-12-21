@@ -129,7 +129,7 @@ public class Monster extends Card{
 
 
     //---- Fight functions
-    public boolean attack(Monster monster) {
+    public void attack(Monster monster) {
         double randomCoef = 0.85 + Math.random() * (1.0 - 0.85);
         double dammageCoef = 1.0;
         double dammage = 0.0;
@@ -146,21 +146,36 @@ public class Monster extends Card{
         if (this.getCurrentState() instanceof NormalState) {
             dammage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * dammageCoef * randomCoef;
         }
+        // Others State
+        // TODO
 
         // Fail attack
-        double randomFail = Math.random();
-        
-        if (randomFail <= this.inUseAttack.getFail()) {
-            return false;
+        if (!this.failAttack(false)) {
+            // Make dammage
+            monster.reduceHp((int) Math.round(dammage));
+
+            // Capacity
+            // TODO monster.setState(new State);
+        }
+    }
+
+    public boolean failAttack(boolean forceFailure) {
+        // If attack forced to fail
+        if (forceFailure) {
+            System.out.println("Attack Failed !");
+            this.setDamageReceived(0);
+            return true;
         }
 
-        // Make dammage
-        monster.reduceHp((int) Math.round(dammage));
+        // Calcul failure attack
+        double randomFail = Math.random();
 
-        // Capacity
-        // TODO monster.setState(new State);
+        if (randomFail <= this.inUseAttack.getFail()) {
+            System.out.println("Attack Failed !");
+            return true;
+        }
 
-        return true;
+        return false;
     }
 
     public void reduceHp(int dammage) {
@@ -209,5 +224,9 @@ public class Monster extends Card{
 
     public static void removeLast() {
         monsters.remove(monsters.size() - 1);
+    }
+
+    public static void remove(Monster monster) {
+        monsters.remove(monster);
     }
 }
