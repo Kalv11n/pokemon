@@ -6,7 +6,9 @@ public class TypeWater extends Type{
     
     public TypeWater() {
         super("Fire", "Electric");
-        this.setName("Eau");
+        this.setName("Water");
+        this.flood = 0;
+        this.fall = 0;
     }
 
     public float getFlood() {

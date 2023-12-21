@@ -3,8 +3,20 @@ package entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.state.BurnedState;
+import entity.state.HealthState;
+import entity.state.HidedState;
 import entity.state.NormalState;
+import entity.state.ParalyzedState;
+import entity.state.PoisonedState;
 import entity.state.State;
+import entity.types.TypeEarth;
+import entity.types.TypeElectric;
+import entity.types.TypeFire;
+import entity.types.TypeInsect;
+import entity.types.TypeNature;
+import entity.types.TypePlant;
+import entity.types.TypeWater;
 
 public class Monster extends Card{
     private static List<Monster> monsters = new ArrayList<Monster>();
@@ -17,12 +29,12 @@ public class Monster extends Card{
     // Others
     private Attack inUseAttack;
     private State currentState;
-    private int dammageReceived;
+    private int damageReceived;
 
     public Monster() {
         this.currentState = new NormalState();
         this.attacks = new Attack[4];
-        this.dammageReceived = 0;
+        this.damageReceived = 0;
         monsters.add(this);
     }
 
@@ -83,16 +95,15 @@ public class Monster extends Card{
         this.currentState = state;
     }
 
-
-    //---- toString
     public Attack getInUseAttack(){
         return this.inUseAttack;
     }
-
+    
     public void setInUseAttack(Attack attack){
         this.inUseAttack = attack;
     }
-
+    
+    //---- toString
     @Override
     public String toString() {
         String output = "(" + this.getType().getName() + ")\t";
@@ -131,38 +142,49 @@ public class Monster extends Card{
     //---- Fight functions
     public void attack(Monster monster) {
         double randomCoef = 0.85 + Math.random() * (1.0 - 0.85);
-        double dammageCoef = 1.0;
-        double dammage = 0.0;
-        double capacityRate;
+        double damageCoef = 1.0;
+        double damage = 0.0;
 
         // Check advantage or weakness
         if (this.hasAdvantage(monster)) {
-            dammageCoef = 2.0;
+            damageCoef = 2.0;
         } else if (this.hasWeakness(monster)) {
-            dammageCoef = 0.5;
+            damageCoef = 0.5;
         }
 
         // Normal State
         if (this.getCurrentState() instanceof NormalState) {
-            dammage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * dammageCoef * randomCoef;
+            damage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * damageCoef * randomCoef;
         }
         // Others State
         // TODO
 
         // Fail attack
         if (!this.failAttack(false)) {
-            // Make dammage
-            monster.reduceHp((int) Math.round(dammage));
+            // Make damage
+            monster.reduceHp((int) Math.round(damage));
 
             // Capacity
-            // TODO monster.setState(new State);
+            // System.out.println(this.getCapacity());
+            if (this.getCapacity() != 0) { // Check if have a capacity rate
+                double randomCapacity = Math.random();
+                double capacityRate = this.getCapacity();
+
+                // If capacity success
+                if (randomCapacity <= capacityRate) {
+                    this.applyCapacity(monster);
+                }
+            }
         }
+
+        // Endure capacity
+        this.currentState.endureCapacity(this);
     }
 
     public boolean failAttack(boolean forceFailure) {
         // If attack forced to fail
         if (forceFailure) {
-            System.out.println("Attack Failed !");
+            System.out.println(this.getName() + " rate son attaque !");
             this.setDamageReceived(0);
             return true;
         }
@@ -171,43 +193,131 @@ public class Monster extends Card{
         double randomFail = Math.random();
 
         if (randomFail <= this.inUseAttack.getFail()) {
-            System.out.println("Attack Failed !");
+            System.out.println(this.getName() + " rate son attaque !");
             return true;
         }
 
         return false;
     }
 
-    public void reduceHp(int dammage) {
-        this.setDamageReceived(dammage);
+    public void applyCapacity(Monster monster) {
+        if (this.getType() instanceof TypeFire) {
+            monster.setCurrentState(new BurnedState());
+            System.out.println(this.getName() + " a brulé " + monster.getName() + " !");
+        } else if (this.getType() instanceof TypeWater) {
+            // State.setFlooded(true);
+            System.out.println(this.getName() + " a innondé le terrain !");
+        } else if (this.getType() instanceof TypeElectric) {
+            monster.setCurrentState(new ParalyzedState());
+            System.out.println(this.getName() + " a paralysé " + monster.getName() + " !");
+        } else if (this.getType() instanceof TypeEarth) {
+            monster.setCurrentState(new HidedState());
+            System.out.println(this.getName() + " se cache !");
+        } else if (this.getType() instanceof TypeInsect) {
+            monster.setCurrentState(new PoisonedState());
+            System.out.println(this.getName() + " a empoisonné " + monster.getName() + " !");
+        } else if (this.getType() instanceof TypeNature) {
+            if (State.flooded) { // Heal only if ground flooded
+                monster.setCurrentState(new HealthState());
+            }
+        } else if (this.getType() instanceof TypePlant) {
+            if (!(this.getCurrentState() instanceof NormalState)) {
+                System.out.println(monster.getName() + " n'est plus altéré !");
+                monster.setCurrentState(new NormalState());
+            }
+        }
+    }
 
-        if (this.hp - dammage < 0) {
+    public double getCapacity() {
+        if (this.getType() instanceof TypeFire) {
+            TypeFire type = (TypeFire) this.getType();
+
+            if (type.getBurn() != 0) {
+                return type.getBurn();
+            }
+
+        } else if (this.getType() instanceof TypeWater) {
+            TypeWater type = (TypeWater) this.getType();
+
+            if (type.getFlood() != 0) {
+                return type.getFlood();
+            }
+
+        } else if (this.getType() instanceof TypeElectric) {
+            TypeElectric type = (TypeElectric) this.getType();
+
+            if (type.getParalysis() != 0) {
+                return type.getParalysis();
+            }
+
+        } else if (this.getType() instanceof TypeEarth) {
+            TypeEarth type = (TypeEarth) this.getType();
+
+            if (type.getHide() != 0) {
+                return type.getHide();
+            }
+
+        } else if (this.getType() instanceof TypeInsect) {
+            TypeInsect type = (TypeInsect) this.getType();
+
+            if (type.getPoison() != 0) {
+                return type.getPoison();
+            }
+
+        } else if (this.getType() instanceof TypePlant) {
+            TypePlant type = (TypePlant) this.getType();
+
+            if (type.getCure() != 0) {
+                return type.getCure();
+            }
+
+        }
+
+        return 0;
+    }
+
+    public void reduceHp(int damage) {
+        this.setDamageReceived(damage);
+
+        if (this.hp - damage < 0) {
             this.hp = 0;
         } else {
-            this.hp -= dammage;
+            this.hp -= damage;
         }
     }
 
     public boolean hasAdvantage(Monster monster) {
-        return (this.getType().getAdvantageType() == monster.getType().getName());
+        String typeName = monster.getType().getName();
+
+        if (typeName.equals("Insect") || typeName.equals("Plant")) {
+            typeName = "Nature";
+        }
+        
+        return (this.getType().getAdvantageType().equals(typeName));
     }
 
     public boolean hasWeakness(Monster monster) {
-        return (this.getType().getWeaknessType() == monster.getType().getName());
+        String typeName = monster.getType().getName();
+
+        if (typeName.equals("Insect") || typeName.equals("Plant")) {
+            typeName = "Nature";
+        }
+        
+        return (this.getType().getWeaknessType().equals(typeName));
     }
 
-    public int getDammageReceived() {
-        return this.dammageReceived;
+    public int getDamageReceived() {
+        return this.damageReceived;
     }
 
-    public void setDamageReceived(int dammage) {
-        this.dammageReceived = dammage;
+    public void setDamageReceived(int damage) {
+        this.damageReceived = damage;
     }
 
 
     //---- Monsters List
     public static Monster find(int position) {
-        return monsters.get(position - 1);
+        return monsters.get(position);
     }
 
     public static List<Monster> findAll() {

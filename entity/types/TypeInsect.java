@@ -5,6 +5,7 @@ public class TypeInsect extends TypeNature {
 
     public TypeInsect() {
         this.setName("Insect");
+        this.poison = 0;
     }
 
     public float getPoison() {
