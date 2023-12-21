@@ -4,16 +4,15 @@ import entity.Monster;
 
 public class BurnedState extends State {
 
-    public BurnedState(){
-
-    }
-    public void subirCapacity(Monster monster){
+    @Override
+    public void endureCapacity(Monster monster){
         if(State.flooded) {
             monster.setCurrentState(new NormalState());
-        }
-        else {
+            System.out.println(monster.getName() + " n'est plus brulé !");
+        } else {
             int damage = (monster.getInUseAttack().getPower()) / 10;
             monster.setHp(monster.getHp() - damage);
+            System.out.println(monster.getName() + " est brulé ! (Dégats subis : " + damage + ")");
         }
     }
 

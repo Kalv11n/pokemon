@@ -6,6 +6,7 @@ public class TypeElectric extends Type {
     public TypeElectric() {
         super("Water", "Earth");
         this.setName("Electric");
+        this.paralysis = 0;
     }
 
     public float getParalysis() {

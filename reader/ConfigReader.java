@@ -34,14 +34,6 @@ public class ConfigReader {
                     this.file = new File(DIR + "/monster.config");
                     break;
                 
-                case "object":
-                    this.file = new File(DIR + "/object.config");
-                    break;
-                
-                case "state":
-                    this.file = new File(DIR + "/state.config");
-                    break;
-                
                 default:
                     throw new ConfigurationErrorException("Invalid configuration filename.");
             }
@@ -55,14 +47,6 @@ public class ConfigReader {
 
                 case "monster":
                     this.readMonster();
-                    break;
-                
-                case "object":
-                    this.readObject();
-                    break;
-                
-                case "state":
-                    this.readState();
                     break;
                 
                 default:
@@ -190,13 +174,5 @@ public class ConfigReader {
                     break;
             }
         }
-    }
-
-    private void readObject() {
-
-    }
-
-    private void readState() {
-
     }
 }
