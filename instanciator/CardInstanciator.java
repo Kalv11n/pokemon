@@ -15,7 +15,7 @@ import entity.types.TypePlant;
 import entity.types.TypeWater;
 import exception.InstanciatorErrorException;
 
-public abstract class Instanciator {
+public abstract class CardInstanciator {
     
     public static boolean hasAttribute(Object obj, String attributeName) {
         Class<?> objClass = obj.getClass();

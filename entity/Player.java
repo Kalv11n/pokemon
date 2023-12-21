@@ -1,15 +1,19 @@
 package entity;
 
+import java.util.ArrayList;
+
 public class Player {
     public static int playerId = 0;
     private int id;
     private Monster[] playerMonsters;
+    private entity.objects.Object[] playerObjects;
     private Monster inUseMonster;
     private boolean allowAttacking;
 
     public Player() {
         this.allowAttacking = true;
         this.playerMonsters = new Monster[3];
+        this.playerObjects = new entity.objects.Object[5];
         playerId++;
         this.id = playerId;
     }
@@ -27,8 +31,33 @@ public class Player {
         }
     }
 
+    public void addObject(entity.objects.Object newObject) {
+        for (int i = 0; i < 5; i++) {
+            if (this.playerObjects[i] == null) {
+                this.playerObjects[i] = newObject;
+                return;
+            }
+        }
+    }
+
+    public void removeObject(int index) {
+        entity.objects.Object[] temp ;
+        int w = 0;
+        for(int i=0;i<playerObjects.length;i++){
+            if(i!=index){
+                temp[w] = playerObjects[i];
+                w++;
+            }
+        }
+        playerObjects = temp;
+    }
+
     public Monster[] getPlayerMonsters(){
         return this.playerMonsters;
+    }
+
+    public Object[] getPlayerObjects(){
+        return this.playerObjects;
     }
 
     public Monster getInUseMonster(){

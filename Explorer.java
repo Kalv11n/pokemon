@@ -4,6 +4,7 @@ import java.util.Scanner;
 import entity.Attack;
 import entity.Monster;
 import entity.Player;
+import instanciator.ObjectInstanciator;
 import reader.InputReader;
 
 public class Explorer {
@@ -14,6 +15,8 @@ public class Explorer {
     public static final String ANSI_BLUE = "\u001B[34m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_ORANGE = "\u001B[38;5;208m";
+
 
     private Scanner sc;
     private InputReader reader;
@@ -36,6 +39,9 @@ public class Explorer {
 
     private void init(){
         String choice;
+
+        // Instanciate object
+        ObjectInstanciator.instanciate();
 
         for(Player player : players){
             System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
@@ -82,14 +88,38 @@ public class Explorer {
                     System.out.println("  " + ANSI_PURPLE + "-> " + attack.getName() + ANSI_RESET);
                 }
             }
+            System.out.println("\n== CHOISISSEZ 5 OBJETS ==");
+            for(int w=0; w < 5; w++) {
+                printObjects();
+                // Select object
+                do {
+                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet:" + ANSI_RESET + " ");
+                    choice = sc.nextLine();
+                    
+                } while(!this.reader.checkInterval(1, 4, choice));    
+                
+                // Add object to player objects
+                entity.objects.Object object = entity.objects.Object.find(Integer.parseInt(choice) - 1);
+                player.addObject(object);
+                System.out.println(ANSI_PURPLE + "-> " + object.getName() + ANSI_RESET +"\n");
+            }
+
+            
             
             // Show deck
             System.out.println(ANSI_GREEN + "\n\nTon deck:" + ANSI_RESET + "\n");
 
-            Monster[] deck = player.getPlayerMonsters();
-            for(int i=0; i < deck.length; i++){
-                System.out.println(ANSI_CYAN + "-> " + deck[i].toStringWithAttacks() + ANSI_RESET);
+            Monster[] deckMonsters = player.getPlayerMonsters();
+            for(int i=0; i < deckMonsters.length; i++){
+                System.out.println(ANSI_CYAN + "-> " + deckMonsters[i].toStringWithAttacks() + ANSI_RESET);
             }
+            System.out.print(ANSI_ORANGE + "\nObjets: [");
+            Object[] deckObjects = player.getPlayerObjects();
+            for(int i=0; i < deckObjects.length - 1; i++){
+                System.out.print(ANSI_ORANGE + deckObjects[i] + ", ");
+            }
+            System.out.print(ANSI_ORANGE + deckObjects[deckObjects.length - 1]);
+            System.out.print("]\n" + ANSI_RESET );
         }   
 
         System.out.println(ANSI_PURPLE + "\nLe terrain est neutre.\n");
@@ -186,7 +216,7 @@ public class Explorer {
 
             // Check input
             do {
-                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'attaque':" + ANSI_RESET + " ");
+                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'attaque:" + ANSI_RESET + " ");
                 choice = sc.nextLine();
 
             } while(!this.reader.checkInterval(1, (i + 1), choice));
@@ -270,8 +300,22 @@ public class Explorer {
         System.out.println(); // TMP
 
         // Use object
-        if(choice.equals("O")){
-            //TO DO
+        if(choice.toUpperCase().equals("O")){
+            int i = 0;
+            for(; i < player.getPlayerObjects().length; i++){
+                System.out.println("[" + ANSI_RED + (i + 1) + ANSI_RESET + "] " + ANSI_ORANGE + player.getPlayerObjects()[i] + ANSI_RESET);
+            }
+            // Check input
+            do {
+                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'objet:" + ANSI_RESET + "");
+                choice = sc.nextLine();
+
+            } while(!this.reader.checkInterval(1, (i + 1), choice));
+
+            entity.objects.Object object = (entity.objects.Object) player.getPlayerObjects()[Integer.parseInt(choice) - 1];
+            System.out.println("\n" + ANSI_GREEN +"JOUEUR " + player.getId() + " utilise " + object.getName() + ANSI_RESET);
+            object.useObject(player.getInUseMonster());
+            player.removeObject(Integer.parseInt(choice) - 1);
         }
     }
 
@@ -294,6 +338,14 @@ public class Explorer {
         
         for(int i=1; i <= Monster.findAll().size(); i++){
             System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + Monster.find(i));
+        }
+    }
+
+    public void printObjects() {
+        System.out.println();
+        
+        for(int i=1; i <= entity.objects.Object.objects.size(); i++){
+            System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + entity.objects.Object.find((i - 1)));
         }
     }
 }
