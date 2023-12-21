@@ -13,14 +13,14 @@ public class ParalyzedState extends State {
     public void subirCapacity(Monster monster){
         Random rand = new Random();
         boolean val = rand.nextInt(6) < (7-getNbturn()); //(7-getNbturn)/6 de probabilité pour true
-        if(val == true) {
+        if(val) {
             monster.setCurrentState(new NormalState());
         }
         else {
             this.nbturn -= 1; //decrement remaining turn
             val = rand.nextInt(4) < (1);
             if(!val){
-                monster.failAttack();
+                monster.failAttack(true);
             }
             
         }
