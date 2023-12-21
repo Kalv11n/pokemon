@@ -13,6 +13,9 @@ public class Attack extends Card {
     private int power;
     private float fail;
     
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_RESET = "\u001B[0m";
+
     public Attack() {
         attacks.add(this);
     }
@@ -53,11 +56,11 @@ public class Attack extends Card {
     public String toString() {
 
         if (name.length() < 8) {
-            return this.name + "\t\t[nbuse=" + nbuse + ", power=" + power
+            return ANSI_YELLOW + this.name + ANSI_RESET + "\t\t[nbuse=" + nbuse + ", power=" + power
                 + ", fail=" + fail + "]";
         }
 
-        return this.name + "\t[nbuse=" + nbuse + ", power=" + power
+        return ANSI_YELLOW + this.name + ANSI_RESET + "\t[nbuse=" + nbuse + ", power=" + power
             + ", fail=" + fail + "]";
     }
 

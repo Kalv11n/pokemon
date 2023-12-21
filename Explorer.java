@@ -10,13 +10,13 @@ import reader.InputReader;
 
 public class Explorer {
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_RED = "\u001B[31m"; //player
+    public static final String ANSI_GREEN = "\u001B[32m";//indication
     public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_BLUE = "\u001B[34m";//monster
+    public static final String ANSI_PURPLE = "\u001B[35m";//return
     public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_ORANGE = "\u001B[38;5;208m";
+    public static final String ANSI_ORANGE = "\u001B[38;5;208m";//object
 
 
     private Scanner sc;
@@ -45,6 +45,7 @@ public class Explorer {
         ObjectInstanciator.instanciate();
 
         for(Player player : players){
+            clearScreen();
             System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
             System.out.println("== CHOISISSEZ 3 POKEMONS ==");
 
@@ -71,7 +72,7 @@ public class Explorer {
                 List<Attack> attacks = Attack.findByType(monster.getType());
                 
                 for(int j=0; j < attacks.size(); j++){
-                    System.out.println("[" + ANSI_RED +  (j + 1) + ANSI_RESET + "]\t" + attacks.get(j));
+                    System.out.println("[" + ANSI_RED +  (j + 1) + ANSI_RESET + "]\t" + attacks.get(j) + ANSI_RESET);
                 }
 
                 for(int j=0; j < 4; j++){
@@ -88,8 +89,9 @@ public class Explorer {
 
                     System.out.println("  " + ANSI_PURPLE + "-> " + attack.getName() + ANSI_RESET);
                 }
+                clearScreen();
             }
-            System.out.println("\n== CHOISISSEZ 5 OBJETS ==");
+            System.out.println("\n== CHOISISSEZ 5 OBJETS ==\n");
             for(int w=0; w < 5; w++) {
                 printObjects();
                 // Select object
@@ -179,8 +181,8 @@ public class Explorer {
                         System.out.println("C'est n'est pas très efficace !");
                     }
 
-                    System.out.println("Dégats infligés : " + ennemyMonster.getDamageReceived());
-                    System.out.println(ennemyMonster.getName() + " (PV restants : " + ennemyMonster.getHp() + ")");
+                    System.out.println("Dégats infligés : " + ANSI_RED + ennemyMonster.getDamageReceived());
+                    System.out.println(ennemyMonster.getName() + " (PV restants : " + ANSI_GREEN + ennemyMonster.getHp() + ")");
                 } 
                 // else {
                     // player.setAllowAttacking(true);
@@ -192,8 +194,9 @@ public class Explorer {
 
     //---- Others
     public void interact(Player player) {
+        clearScreen();
         System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
-        System.out.println("Monstre actuel : " + player.getInUseMonster().toString());  
+        System.out.println("\nMonstre actuel : " + player.getInUseMonster().toString());  
         String choice;
 
         // Change monster
@@ -293,7 +296,7 @@ public class Explorer {
         do {
             System.out.print("\n" + ANSI_GREEN +"UTILISER UN OBJET"+ ANSI_RESET +": [" + ANSI_RED + "O" + ANSI_RESET +"]: oui "+"[" + ANSI_RED + "N"  + ANSI_RESET +"]: non ");
             choice = sc.nextLine();
-
+            System.out.print("\n");
         } while(!this.reader.checkChoice(availableChoices, choice));
 
         // Use object
@@ -310,7 +313,7 @@ public class Explorer {
             } while(!this.reader.checkInterval(1, (i + 1), choice));
 
             entity.objects.Object object = (entity.objects.Object) player.getPlayerObjects()[Integer.parseInt(choice) - 1];
-            System.out.println("\n" + ANSI_GREEN +"JOUEUR " + player.getId() + " utilise " + object.getName() + ANSI_RESET);
+            System.out.println(ANSI_RED +"JOUEUR " + player.getId() + " UTILISE " + object.getName().toUpperCase() + ANSI_RESET + "\n");
             object.useObject(player.getInUseMonster());
             player.removeObject(Integer.parseInt(choice) - 1);
         }
@@ -318,11 +321,11 @@ public class Explorer {
 
     public boolean haveWinner() {
         if (this.players[0].allMonstersKO()) {
-            System.out.println("\n" + ANSI_GREEN +"Joueur " + players[0].getId() + ", tous les monstres sont KO." + ANSI_RESET + "\n");
-            System.out.println("\n" + ANSI_GREEN +"Joueur " + players[1].getId() + " à gagné !!!" + ANSI_RESET + "\n");
+            System.out.println("\n" + ANSI_RED + "Joueur " + players[0].getId() + ", tous les monstres sont KO." + ANSI_RESET);
+            System.out.println("\n" + ANSI_GREEN + "Joueur " + players[1].getId() + " a gagné !!!" + ANSI_RESET + "\n");
             return true;
         } else if(this.players[1].allMonstersKO()) {
-            System.out.println("\n" + ANSI_GREEN +"Joueur " + players[1].getId() + ", tous les monstres sont KO." + ANSI_RESET + "\n");
+            System.out.println("\n" + ANSI_RED +"Joueur " + players[1].getId() + ", tous les monstres sont KO." + ANSI_RESET + "\n");
             System.out.println("\n" + ANSI_GREEN +"Joueur " + players[0].getId() + " à gagné !!!" + ANSI_RESET + "\n");
             return true;
         }
@@ -343,4 +346,9 @@ public class Explorer {
             System.out.println("[" + ANSI_RED + i + ANSI_RESET + "]\t" + entity.objects.Object.find((i - 1)));
         }
     }
+
+    public static void clearScreen() {  
+        System.out.print("\033[H\033[2J");  
+        System.out.flush();  
+    } 
 }
