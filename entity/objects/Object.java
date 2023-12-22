@@ -11,9 +11,12 @@ public abstract class Object {
 
     public abstract void useObject(Monster monster);
 
+    public static final String ANSI_ORANGE = "\u001B[38;5;208m";
+    public static final String ANSI_RESET = "\u001B[0m";
+
     @Override
     public String toString() {
-        String output = this.getName();
+        String output =  ANSI_ORANGE + this.getName() + ANSI_RESET;
         return output; 
     }
 

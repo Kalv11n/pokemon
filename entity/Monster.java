@@ -32,6 +32,18 @@ public class Monster extends Card{
     private State currentState;
     private int damageReceived;
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_ORANGE = "\u001B[38;5;208m";
+    public static final String ANSI_BROWN = "\u001B[38;2;98;42;15m";;
+    public static final String ANSI_GRAY = "\u001B[90m";
+
+
     public Monster() {
         this.currentState = new NormalState();
         this.attacks = new Attack[4];
@@ -107,11 +119,31 @@ public class Monster extends Card{
     //---- toString
     @Override
     public String toString() {
-        String output = "(" + this.getType().getName() + ")\t";
+        String output = "";
+        switch (this.getType().getName()) {
+            case "Plant":
+                output = ANSI_RESET + "(" + ANSI_GREEN + this.getType().getName() + ANSI_RESET + ")\t";
+                break;
+            case "Fire":
+                output = ANSI_RESET + "(" + ANSI_RED + this.getType().getName() + ANSI_RESET + ")\t";
+                break;
+            case "Water":
+                output = ANSI_RESET + "(" + ANSI_BLUE + this.getType().getName() + ANSI_RESET + ")\t";
+                break;
+            case "Earth":
+                output = ANSI_RESET + "(" + ANSI_BROWN + this.getType().getName() + ANSI_RESET + ")\t";
+                break;
+            case "Electric":
+                output = ANSI_RESET + "(" + ANSI_YELLOW + this.getType().getName() + ANSI_RESET + ")\t";
+                break;
+            default:
+                output = ANSI_RESET + "(" + ANSI_GRAY + this.getType().getName() + ANSI_RESET + ")\t";
+                break;
+        }
 
-        if (this.getType().getName().length() < 6) {
-            output += "\t";
-        } 
+if (this.getType().getName().length() < 6) {
+    output += "\t";
+}
 
         output += this.name + "\t";
 
@@ -189,7 +221,7 @@ public class Monster extends Card{
         } else { // Flooded failure
             int damageReceived = (int) Math.round(damage * 0.25);
             this.reduceHp(damageReceived);
-            System.out.println(this.getName() + " a glissé ! (Dégats subis : " + damageReceived + ")");
+            System.out.println(this.getName() + " a glissé ! (Dégats subis : " + ANSI_RED + damageReceived + ")");
 
             this.failAttack(true);
         }

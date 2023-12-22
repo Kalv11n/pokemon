@@ -12,6 +12,6 @@ public class SpongeObject extends Object{
     
     @Override
     public void useObject(Monster monster){
-        State.setFlooded(false);
+        //State.setFlooded(false);
     }
 }
