@@ -7,7 +7,7 @@ import entity.state.State;
 public class HealObject extends Object {
     
     public HealObject(){
-        this.setName("Heal ");
+        this.setName("Potion de guérison (Soigne les alitérations d'état)");
         Object.objects.add(this);
     }
 

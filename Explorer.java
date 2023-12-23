@@ -12,7 +12,7 @@ public class Explorer {
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_RED = "\u001B[31m"; //player
     public static final String ANSI_GREEN = "\u001B[32m";//indication
-    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_YELLOW = "\u001B[33m";//attack
     public static final String ANSI_BLUE = "\u001B[34m";//monster
     public static final String ANSI_PURPLE = "\u001B[35m";//return
     public static final String ANSI_CYAN = "\u001B[36m";
@@ -39,13 +39,16 @@ public class Explorer {
     }
 
     private void init(){
+        clearScreen();
         String choice;
 
         // Instanciate object
         ObjectInstanciator.instanciate();
 
+        // Instanciate new FloodedGroundState 
+        new FloodedGroundState();
+
         for(Player player : players){
-            clearScreen();
             System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
             System.out.println("== CHOISISSEZ 3 POKEMONS ==");
 
@@ -107,7 +110,7 @@ public class Explorer {
                 System.out.println(ANSI_PURPLE + "-> " + object.getName() + ANSI_RESET +"\n");
             }
 
-            
+            clearScreen();
             
             // Show deck
             System.out.println(ANSI_GREEN + "\n\nTon deck:" + ANSI_RESET + "\n");
@@ -122,7 +125,10 @@ public class Explorer {
                 System.out.print(ANSI_ORANGE + deckObjects[i] + ", ");
             }
             System.out.print(ANSI_ORANGE + deckObjects[deckObjects.length - 1]);
-            System.out.print("]\n" + ANSI_RESET );
+            System.out.print(ANSI_ORANGE + "]\n" + ANSI_RESET );
+
+            this.sc.nextLine();
+            clearScreen();
         }   
 
         System.out.println(ANSI_PURPLE + "\nLe terrain est neutre.\n");
@@ -131,20 +137,19 @@ public class Explorer {
         // Init monsters by default
         players[0].setInUseMonster(players[0].getPlayerMonsters()[0]);
         players[1].setInUseMonster(players[1].getPlayerMonsters()[0]);
+
+        this.sc.nextLine();
     }
 
     private void play() {
         // Main loop
         do {
-            // Flooded instruction
-            if (FloodedGroundState.flooded) {
-                FloodedGroundState.decrementTurn();
-            }
-
             // Player interactions
             for (Player player : players) {
                 this.interact(player);
             }
+
+            clearScreen();
 
             // Player distribution
             Player[] playersOrder;
@@ -157,7 +162,7 @@ public class Explorer {
             }
 
             for (Player player : playersOrder) {
-                if (player.getAllowAttacking()) {
+                if (player.getAllowAttacking() && player.getInUseMonster().getHp() != 0) {
                     // Player monster
                     Player currentPlayer = player;
                     Monster currentMonster = currentPlayer.getInUseMonster();
@@ -170,8 +175,8 @@ public class Explorer {
                     Monster ennemyMonster = ennemyPlayer.getInUseMonster();
 
                     // Attack Player Monster
-                    System.out.println("\n" + currentMonster.getName() + " attaque " + ennemyMonster.getName() + " avec " 
-                        + currentMonster.getInUseAttack().getName() + " !");
+                    System.out.println("\n" + ANSI_BLUE + currentMonster.getName() + ANSI_RESET + " attaque " + ANSI_BLUE + ennemyMonster.getName() + ANSI_RESET + " avec " 
+                        + ANSI_YELLOW + currentMonster.getInUseAttack().getName() + ANSI_RESET + " !");
                     currentMonster.attack(ennemyMonster);
 
                     // Printer
@@ -181,12 +186,17 @@ public class Explorer {
                         System.out.println("C'est n'est pas très efficace !");
                     }
 
-                    System.out.println("Dégats infligés : " + ANSI_RED + ennemyMonster.getDamageReceived());
-                    System.out.println(ennemyMonster.getName() + " (PV restants : " + ANSI_GREEN + ennemyMonster.getHp() + ")");
-                } 
-                // else {
-                    // player.setAllowAttacking(true);
-                // }
+                    System.out.println(ANSI_BLUE + ennemyMonster.getName() + ANSI_RESET + " (PV restants : " + ANSI_GREEN + ennemyMonster.getHp() + ANSI_RESET + ")");
+                }
+            }
+
+            this.sc.nextLine();
+            clearScreen();
+
+            // Flooded instruction
+            if (FloodedGroundState.flooded) {
+                System.out.println(ANSI_PURPLE + "Le terrain est innondé." + ANSI_RESET);
+                FloodedGroundState.decrementTurn();
             }
 
         } while (!this.haveWinner());
@@ -194,9 +204,8 @@ public class Explorer {
 
     //---- Others
     public void interact(Player player) {
-        clearScreen();
         System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
-        System.out.println("\nMonstre actuel : " + player.getInUseMonster().toString());  
+        System.out.println("\nMonstre actuel : " + player.getInUseMonster().toString() + " Etat actuel : " + player.getInUseMonster().getCurrentState());  
         String choice;
 
         // Change monster
@@ -223,6 +232,8 @@ public class Explorer {
             
             monster.setInUseAttack(monster.getAttacks()[Integer.parseInt(choice) - 1]);
         }
+
+        clearScreen();
     }
 
     public void changeMonster(Player player) {
@@ -265,7 +276,7 @@ public class Explorer {
                     System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id de monstre: " + ANSI_RESET);
                     choice = sc.nextLine();
 
-                } while(!this.reader.checkInterval(1, (i + 1), choice));
+                } while(!this.reader.checkInterval(1, i, choice));
 
                 Monster monster = player.getPlayerMonsters()[Integer.parseInt(choice) - 1];
 
@@ -279,11 +290,14 @@ public class Explorer {
                 // Check flooder monster
                 if (FloodedGroundState.monster == player.getInUseMonster()) {
                     FloodedGroundState.killFlood();
+                    System.out.println(ANSI_PURPLE + "Le terrain n'est plus innondé." + ANSI_RESET);
                 }
 
                 // Update in use monster
                 System.out.println("\n" + ANSI_GREEN + monster.getName() + " ! A toi de jouer !" + ANSI_RESET);
                 player.setInUseMonster(monster);
+
+                this.sc.nextLine();
 
             } while (!changeApproved);
         }
@@ -313,7 +327,7 @@ public class Explorer {
             } while(!this.reader.checkInterval(1, (i + 1), choice));
 
             entity.objects.Object object = (entity.objects.Object) player.getPlayerObjects()[Integer.parseInt(choice) - 1];
-            System.out.println(ANSI_RED +"JOUEUR " + player.getId() + " UTILISE " + object.getName().toUpperCase() + ANSI_RESET + "\n");
+            System.out.println("\n" + ANSI_PURPLE + "Joueur " + player.getId() + " utilise l'objet : " + object.getName() + ANSI_RESET + "\n");
             object.useObject(player.getInUseMonster());
             player.removeObject(Integer.parseInt(choice) - 1);
         }
@@ -348,7 +362,7 @@ public class Explorer {
     }
 
     public static void clearScreen() {  
-        System.out.print("\033[H\033[2J");  
-        System.out.flush();  
+        // System.out.print("\033[H\033[2J");  
+        // System.out.flush();  
     } 
 }

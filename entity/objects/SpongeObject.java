@@ -1,17 +1,17 @@
 package entity.objects;
 
 import entity.Monster;
-import entity.state.State;
+import entity.state.FloodedGroundState;
 
 public class SpongeObject extends Object{
 
     public SpongeObject(){
-        this.setName("Sponge");
+        this.setName("Eponge (Arrête une innondation)");
         Object.objects.add(this);
     }
     
     @Override
     public void useObject(Monster monster){
-        //State.setFlooded(false);
+        FloodedGroundState.killFlood();
     }
 }

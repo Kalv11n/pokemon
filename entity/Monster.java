@@ -136,6 +136,9 @@ public class Monster extends Card{
             case "Electric":
                 output = ANSI_RESET + "(" + ANSI_YELLOW + this.getType().getName() + ANSI_RESET + ")\t";
                 break;
+            case "Insect":
+                output = ANSI_RESET + "(" + ANSI_PURPLE + this.getType().getName() + ANSI_RESET + ")\t";
+                break;  
             default:
                 output = ANSI_RESET + "(" + ANSI_GRAY + this.getType().getName() + ANSI_RESET + ")\t";
                 break;
@@ -185,19 +188,23 @@ if (this.getType().getName().length() < 6) {
             damageCoef = 0.5;
         }
 
-        // Normal State
-        if (this.getCurrentState() instanceof NormalState) {
-            damage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * damageCoef * randomCoef;
-        }
+        // Attack
+        damage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * damageCoef * randomCoef;
 
         // Flooded condition
         boolean fall = false;
-        if (FloodedGroundState.flooded && !(monster.getType() instanceof TypeWater)) { // All apart Water Type
+        if (FloodedGroundState.flooded && !(this.getType() instanceof TypeWater)) { // All apart Water Type
             double fallRate = Math.random();
 
-            // if (fallRate <= (TypeWater) FloodedGroundState.monster.getFall()) { // TODO 
-            //     fall = true;
-            // }
+            TypeWater flooder = (TypeWater) FloodedGroundState.monster.getType(); 
+            if (fallRate <= flooder.getFall()) {
+                fall = true;
+            }
+        }
+
+        // Heal condition
+        if (this.getType() instanceof TypeNature && FloodedGroundState.flooded) { 
+            this.setCurrentState(new HealthState());
         }
 
         // Normal attack
@@ -206,6 +213,7 @@ if (this.getType().getName().length() < 6) {
             if (!this.failAttack(false)) {
                 // Make damage
                 monster.reduceHp((int) Math.round(damage));
+                System.out.println("Dégats infligés : " + ANSI_RED + monster.getDamageReceived() + ANSI_RESET);
 
                 // Capacity
                 if (this.getCapacity() != 0) { // Check if have a capacity rate
@@ -221,28 +229,23 @@ if (this.getType().getName().length() < 6) {
         } else { // Flooded failure
             int damageReceived = (int) Math.round(damage * 0.25);
             this.reduceHp(damageReceived);
-            System.out.println(this.getName() + " a glissé ! (Dégats subis : " + ANSI_RED + damageReceived + ")");
+            System.out.println(this.getName() + " a glissé ! (Dégats subis : " + ANSI_RED + damageReceived + ANSI_RESET + ")");
 
             this.failAttack(true);
+            this.setDamageReceived(0); // damage received = 0 for printing 
         }
 
         // Endure capacity
         this.currentState.endureCapacity(this);
     }
 
-    public boolean failAttack(boolean forceFailure) {
-        // If attack forced to fail
-        if (forceFailure) {
-            System.out.println(this.getName() + " rate son attaque !");
-            this.setDamageReceived(0);
-            return true;
-        }
-
+    public boolean failAttack(boolean forceFailure) {     
         // Calcul failure attack
         double randomFail = Math.random();
 
-        if (randomFail <= this.inUseAttack.getFail()) {
+        if (randomFail <= this.inUseAttack.getFail() || forceFailure) {
             System.out.println(this.getName() + " rate son attaque !");
+            this.setDamageReceived(0);
             return true;
         }
 
@@ -254,27 +257,26 @@ if (this.getType().getName().length() < 6) {
             monster.setCurrentState(new BurnedState());
             System.out.println(this.getName() + " a brulé " + monster.getName() + " !");
         } else if (this.getType() instanceof TypeWater) {
-            // Flooded update
-            FloodedGroundState.setFlooded(true);
-            FloodedGroundState.updateFloodedTurn();
-            System.out.println(this.getName() + " a innondé le terrain !");
+            if (!FloodedGroundState.flooded) {
+                // Flooded update
+                FloodedGroundState.setFlooded(true);
+                FloodedGroundState.updateFloodedTurn();
+                FloodedGroundState.saveFlooderMonster(this);
+                System.out.println(this.getName() + " a innondé le terrain !");
+            }
         } else if (this.getType() instanceof TypeElectric) {
             monster.setCurrentState(new ParalyzedState());
             System.out.println(this.getName() + " a paralysé " + monster.getName() + " !");
         } else if (this.getType() instanceof TypeEarth) {
-            monster.setCurrentState(new HidedState());
+            this.setCurrentState(new HidedState());
             System.out.println(this.getName() + " se cache !");
         } else if (this.getType() instanceof TypeInsect) {
             monster.setCurrentState(new PoisonedState());
             System.out.println(this.getName() + " a empoisonné " + monster.getName() + " !");
-        } else if (this.getType() instanceof TypeNature) {
-            if (FloodedGroundState.flooded) { // Heal only if ground flooded
-                monster.setCurrentState(new HealthState());
-            }
         } else if (this.getType() instanceof TypePlant) {
             if (!(this.getCurrentState() instanceof NormalState)) {
-                System.out.println(monster.getName() + " n'est plus altéré !");
-                monster.setCurrentState(new NormalState());
+                System.out.println(this.getName() + " n'est plus altéré !");
+                this.setCurrentState(new NormalState());
             }
         }
     }
