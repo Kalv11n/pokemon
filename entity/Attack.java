@@ -65,6 +65,19 @@ public class Attack extends Card {
     }
 
     //---- Others
+    public boolean canUse() {
+        // Check uses
+        if (this.nbuse == 0) {
+            System.out.println(ANSI_YELLOW + this.getName() + ANSI_RESET + " ne peux plus être utilisé !");
+            return false;
+        }
+
+        // Decrement
+        this.nbuse --;
+
+        return true;
+    }
+
     public static Attack find(int position) {
         return attacks.get(position);
     }

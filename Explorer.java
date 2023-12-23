@@ -48,6 +48,10 @@ public class Explorer {
         // Instanciate new FloodedGroundState 
         new FloodedGroundState();
 
+        // Instanciate Attack with hands for all
+        // new Attack().setName("Mains");
+
+        // Players selection
         for(Player player : players){
             System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
             System.out.println("== CHOISISSEZ 3 POKEMONS ==");
@@ -177,6 +181,7 @@ public class Explorer {
                     // Attack Player Monster
                     System.out.println("\n" + ANSI_BLUE + currentMonster.getName() + ANSI_RESET + " attaque " + ANSI_BLUE + ennemyMonster.getName() + ANSI_RESET + " avec " 
                         + ANSI_YELLOW + currentMonster.getInUseAttack().getName() + ANSI_RESET + " !");
+                    
                     currentMonster.attack(ennemyMonster);
 
                     // Printer
@@ -223,14 +228,18 @@ public class Explorer {
                 System.out.println("[" + ANSI_RED + (i + 1) + ANSI_RESET + "] " + ANSI_CYAN + monster.getAttacks()[i] + ANSI_RESET);
             }
 
-            // Check input
+            // Check ability to attack
             do {
-                System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'attaque: " + ANSI_RESET);
-                choice = sc.nextLine();
+                // Check input
+                do {
+                    System.out.print("\n" + ANSI_GREEN + "Veuillez saisir un id d'attaque: " + ANSI_RESET);
+                    choice = sc.nextLine();
 
-            } while(!this.reader.checkInterval(1, (i + 1), choice));
-            
-            monster.setInUseAttack(monster.getAttacks()[Integer.parseInt(choice) - 1]);
+                } while(!this.reader.checkInterval(1, (i + 1), choice));
+
+                monster.setInUseAttack(monster.getAttacks()[Integer.parseInt(choice) - 1]);
+
+            } while(!monster.getInUseAttack().canUse());
         }
 
         clearScreen();
