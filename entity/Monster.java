@@ -188,8 +188,13 @@ if (this.getType().getName().length() < 6) {
             damageCoef = 0.5;
         }
 
-        // Attack
-        damage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * damageCoef * randomCoef;
+        // Attack with hand
+        if (this.inUseAttack.getName().equals("Mains")) {
+            damage = (20 * (this.attack / monster.getDefense()) * randomCoef);
+        } else {
+            // Attack with special attack
+            damage = ((11 * this.attack * this.inUseAttack.getPower()) / (25 * monster.getDefense()) + 2) * damageCoef * randomCoef;
+        }
 
         // Flooded condition
         boolean fall = false;

@@ -54,8 +54,11 @@ public class Attack extends Card {
 
     @Override
     public String toString() {
+        if (this.name.equals("Mains")) {
+            return ANSI_YELLOW + this.name + ANSI_RESET + "\t\t[nbuse=infinite, fail=0]";
+        }
 
-        if (name.length() < 8) {
+        if (this.name.length() < 8) {
             return ANSI_YELLOW + this.name + ANSI_RESET + "\t\t[nbuse=" + nbuse + ", power=" + power
                 + ", fail=" + fail + "]";
         }

@@ -5,6 +5,7 @@ import entity.Attack;
 import entity.Monster;
 import entity.Player;
 import entity.state.FloodedGroundState;
+import entity.types.TypeNormal;
 import instanciator.ObjectInstanciator;
 import reader.InputReader;
 
@@ -49,7 +50,11 @@ public class Explorer {
         new FloodedGroundState();
 
         // Instanciate Attack with hands for all
-        // new Attack().setName("Mains");
+        Attack mains = new Attack();
+        mains.setName("Mains");
+        mains.setNbuse(-1); // Nbuse -1 for infinite
+        mains.setFail(0);
+        mains.setType(new TypeNormal());
 
         // Players selection
         for(Player player : players){
@@ -90,9 +95,20 @@ public class Explorer {
 
                     } while(!this.reader.checkInterval(1, attacks.size(), choice));
 
-                    // Add attack to monster
+                    // Copy attack 
                     Attack attack = attacks.get(Integer.parseInt(choice) - 1);
-                    monster.setAttackInCollection(attack, j);
+                    Attack copy = new Attack();
+                    copy.setName(attack.getName());
+                    copy.setFail(attack.getFail());
+                    copy.setPower(attack.getPower());
+                    copy.setType(attack.getType());
+                    copy.setNbuse(attack.getNbuse());
+
+                    // Add attack to monster
+                    monster.setAttackInCollection(copy, j);
+
+                    // Remove copy from global list
+                    Attack.removeLast();
 
                     System.out.println("  " + ANSI_PURPLE + "-> " + attack.getName() + ANSI_RESET);
                 }
@@ -185,10 +201,12 @@ public class Explorer {
                     currentMonster.attack(ennemyMonster);
 
                     // Printer
-                    if (currentMonster.hasAdvantage(ennemyMonster)) {
-                        System.out.println("C'est très efficace !");
-                    } else if (currentMonster.hasWeakness(ennemyMonster)) {
-                        System.out.println("C'est n'est pas très efficace !");
+                    if (!currentMonster.getInUseAttack().getName().equals("Mains")) {
+                        if (currentMonster.hasAdvantage(ennemyMonster)) {
+                            System.out.println("C'est très efficace !");
+                        } else if (currentMonster.hasWeakness(ennemyMonster)) {
+                            System.out.println("C'est n'est pas très efficace !");
+                        }
                     }
 
                     System.out.println(ANSI_BLUE + ennemyMonster.getName() + ANSI_RESET + " (PV restants : " + ANSI_GREEN + ennemyMonster.getHp() + ANSI_RESET + ")");
@@ -210,7 +228,7 @@ public class Explorer {
     //---- Others
     public void interact(Player player) {
         System.out.println("\n" + ANSI_RED +"======== JOUEUR " + player.getId() + " ========"+ ANSI_RESET);
-        System.out.println("\nMonstre actuel : " + player.getInUseMonster().toString() + " Etat actuel : " + player.getInUseMonster().getCurrentState());  
+        System.out.println("\nMonstre actuel : " + player.getInUseMonster().toString());  
         String choice;
 
         // Change monster
@@ -371,7 +389,7 @@ public class Explorer {
     }
 
     public static void clearScreen() {  
-        // System.out.print("\033[H\033[2J");  
-        // System.out.flush();  
+        System.out.print("\033[H\033[2J");  
+        System.out.flush();  
     } 
 }
