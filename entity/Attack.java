@@ -5,6 +5,7 @@ import java.util.List;
 
 import entity.types.Type;
 import entity.types.TypeNormal;
+import printer.CommentaryPrinter;
 
 public class Attack extends Card {
     private static List<Attack> attacks = new ArrayList<Attack>();
@@ -55,14 +56,9 @@ public class Attack extends Card {
     @Override
     public String toString() {
         if (this.name.equals("Mains")) {
-            return ANSI_YELLOW + this.name + ANSI_RESET + "\t\t[nbuse=infinite, fail=0]";
+            return ANSI_YELLOW + this.name + ANSI_RESET + "\t[nbuse=infinite, fail=0]";
         }
-
-        if (this.name.length() < 8) {
-            return ANSI_YELLOW + this.name + ANSI_RESET + "\t\t[nbuse=" + nbuse + ", power=" + power
-                + ", fail=" + fail + "]";
-        }
-
+        
         return ANSI_YELLOW + this.name + ANSI_RESET + "\t[nbuse=" + nbuse + ", power=" + power
             + ", fail=" + fail + "]";
     }
@@ -71,7 +67,7 @@ public class Attack extends Card {
     public boolean canUse() {
         // Check uses
         if (this.nbuse == 0) {
-            System.out.println(ANSI_YELLOW + this.getName() + ANSI_RESET + " ne peux plus être utilisé !");
+            CommentaryPrinter.printCantUse(this);
             return false;
         }
 

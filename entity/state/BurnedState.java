@@ -1,6 +1,7 @@
 package entity.state;
 
 import entity.Monster;
+import printer.CommentaryPrinter;
 
 public class BurnedState extends State {
 
@@ -8,11 +9,11 @@ public class BurnedState extends State {
     public void endureCapacity(Monster monster){
         if(FloodedGroundState.flooded) {
             monster.setCurrentState(new NormalState());
-            System.out.println(monster.getName() + " n'est plus brulé !");
+            CommentaryPrinter.printNotBurn(monster);
         } else {
             int damage = (monster.getInUseAttack().getPower()) / 10;
             monster.setHp(monster.getHp() - damage);
-            System.out.println(monster.getName() + " est brulé ! (Dégats subis : " + damage + ")");
+            CommentaryPrinter.printBurn(monster, damage);
         }
     }
 

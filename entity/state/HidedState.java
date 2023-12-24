@@ -3,6 +3,7 @@ package entity.state;
 import java.util.Random;
 
 import entity.Monster;
+import printer.CommentaryPrinter;
 
 public class HidedState extends State {
     private int nbturn = 0;
@@ -22,7 +23,8 @@ public class HidedState extends State {
 
             // Change state
             monster.setCurrentState(new NormalState());
-            System.out.println(monster.getName() + " n'est plus caché !");
+            
+            CommentaryPrinter.printNotHide(monster);
         } else {
             // Apply protection
             if (!this.hasProtection) {
@@ -31,7 +33,8 @@ public class HidedState extends State {
                 this.hasProtection = true;
             }
             this.nbturn -= 1; //decrement remaining turn
-            System.out.println(monster.getName() + " est caché !");
+            
+            CommentaryPrinter.printHide(monster);
         }
     }
 }

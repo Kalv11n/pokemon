@@ -3,6 +3,7 @@ package entity.state;
 import java.util.Random;
 
 import entity.Monster;
+import printer.CommentaryPrinter;
 
 public class FloodedGroundState extends State {
     public static boolean flooded = false;
@@ -34,7 +35,7 @@ public class FloodedGroundState extends State {
     public static void killFlood() {
         FloodedGroundState.flooded = false;
         FloodedGroundState.monster = null;
-        System.out.println("\nLe terrain n'est plus innondé !");
+        CommentaryPrinter.printGroundNotFlooded();
     }
 
     @Override

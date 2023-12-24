@@ -9,7 +9,6 @@ import entity.types.TypeEarth;
 import entity.types.TypeElectric;
 import entity.types.TypeFire;
 import entity.types.TypeInsect;
-import entity.types.TypeNature;
 import entity.types.TypeNormal;
 import entity.types.TypePlant;
 import entity.types.TypeWater;
@@ -61,10 +60,6 @@ public abstract class CardInstanciator {
             
             case "Earth":
                 card.setType(new TypeEarth());
-                break;
-            
-            case "Nature":
-                card.setType(new TypeNature());
                 break;
             
             case "Insect":

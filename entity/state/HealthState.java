@@ -1,6 +1,7 @@
 package entity.state;
 
 import entity.Monster;
+import printer.CommentaryPrinter;
 
 public class HealthState extends State {
 
@@ -8,7 +9,8 @@ public class HealthState extends State {
     public void endureCapacity(Monster monster){
         // If new HealthState(this) (TypeNature monster only), save 5% of current HP
         int hp = (int) Math.round(monster.getHp() * 1.05) + 1;
-        System.out.println(monster.getName() + " a récupéré " + (hp - monster.getHp()) + " HP ! ");
+
+        CommentaryPrinter.printHeal(monster, hp);
         monster.setHp(hp);
 
         // Set monster state to Normal
